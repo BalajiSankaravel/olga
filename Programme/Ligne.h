@@ -20,10 +20,9 @@ public:
     void afficheLesVoyage();
     void modificationArrivee(string,string,int);
     void modificationDepart(string,string,int);
-protected:
     string name;
     bool aller;
-    vector< Voyage> lesVoyages;
+    vector<Voyage> lesVoyages;
 
 };
 

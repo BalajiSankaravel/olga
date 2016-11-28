@@ -25,8 +25,6 @@ public:
     string getHeureFin();
     int getDistance();
     string getName();
-    
-protected:
     string TermDeb;
     string TermFin;
     string HeureDeb;

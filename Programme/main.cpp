@@ -8,6 +8,7 @@
 
 #include "FilesReader.h"
 #include "Ligne.h"
+#include "Graphe.h"
 #include <string>
 
 
@@ -27,7 +28,6 @@ vector<Ligne> generationDesLignes(vector <T_UneLigne> lesHoraires) {
         for (int z = 0; z < lesHoraires[i].Horaire[1].size(); z++) {
             validTrajet[z] = 0;
         }
-        
         for (int j = 0; j < lesHoraires[i].Terminus.size(); j++) {
             for (int z = 0; z < lesHoraires[i].Horaire[j].size(); z++) {
                 if (lesHoraires[i].Horaire[j][z] != "") {
@@ -69,11 +69,16 @@ int main(int argc, char** argv) {
     /*Creation des Voyages*/
     vector <Ligne> lesLignes = generationDesLignes(lesHoraires);
     
-    for (int i = 0; i < lesLignes.size(); i++) {
-        cout<<lesLignes[i].getName()<<endl;
-        lesLignes[i].afficheLesVoyage();
-        cout<<endl;
-    }
+    
+    Graphe leGraphe(1);
+    leGraphe.CreationEtat(&lesLignes);
+    
+//    
+//    for (int i = 0; i < lesLignes.size(); i++) {
+//        cout<<lesLignes[i].getName()<<endl;
+//        lesLignes[i].afficheLesVoyage();
+//        cout<<endl;
+//    }
     
 
     /*Creation Graphe*/

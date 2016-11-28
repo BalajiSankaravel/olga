@@ -11,3 +11,6 @@ Etat::Etat(Voyage* pVoyage) {
     voyage = pVoyage; 
 }
 
+string Etat::getName(){
+    return voyage->getName();
+}

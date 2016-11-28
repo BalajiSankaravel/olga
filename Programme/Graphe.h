@@ -7,15 +7,18 @@
 
 #include <vector>
 #include "Etat.h"
+#include "Ligne.h"
 using namespace std;
 #ifndef GRAPHE_H
 #define	GRAPHE_H
 
 class Graphe {
 public:
-    Graphe();
-protected:
+    Graphe(int);
+    void CreationEtat(vector <Ligne>*);
     vector<Etat> lesEtats;
+    vector<Etat> DepotDepart;
+    vector<Etat> DepotArrive;
     
 };
 

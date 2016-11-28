@@ -6,6 +6,7 @@
  */
 
 #include "Voyage.h"
+#include <ctime>
 
 Voyage::Voyage(string terminus, string heure, int dist,string pName) {
     TermDeb = terminus;

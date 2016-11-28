@@ -12,12 +12,14 @@
 
 using namespace std;
 
+
 class Etat {
 public:
     Etat(Voyage*);
-protected:
+    string getName();
     Voyage* voyage;
-    vector< Voyage* > Suivant;
+    vector<voyage*> LesChemins;
+    
 };
 
 #endif	/* ETAT_H */
