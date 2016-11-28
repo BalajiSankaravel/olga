@@ -14,13 +14,20 @@ using namespace std;
 
 class Graphe {
 public:
-    Graphe(int);
+    Graphe(int,vector <vector<int> >*,vector <vector<int> >*);
     void CreationEtat(vector <Ligne>*);
     void GenerationEtatSameLine();
     void GenerationetatMultiLine();
+    void GenerationArcMemeLigne();
+    void GenerationArcLigneDiff();
+    string RemFirstChar(string);
+    void split(const std::string &s, char delim, std::vector<std::string> &elems);
+    vector<string> split(const std::string &s, char delim);
     vector<Etat*> lesEtats;
     vector<Etat*> DepotDepart;
     vector<Etat*> DepotArrive;
+    vector <vector<int> >* matriceTemps;
+    vector <vector<int> >* matriceDist;
     
 };
 

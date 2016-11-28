@@ -69,9 +69,9 @@ int main(int argc, char** argv) {
     /*Creation des Voyages*/
     vector <Ligne> lesLignes = generationDesLignes(lesHoraires);
     
-    
-    Graphe leGraphe(1);
+    Graphe leGraphe(1,&lesTempsTerminus,&lesDistTerminus);
     leGraphe.CreationEtat(&lesLignes);
+    leGraphe.GenerationArcMemeLigne();
     
 //    
 //    for (int i = 0; i < lesLignes.size(); i++) {
