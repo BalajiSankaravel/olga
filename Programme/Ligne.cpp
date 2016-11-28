@@ -45,9 +45,9 @@ void Ligne::modificationDepart(string terminus, string heure,int index){
 void Ligne::afficheLesVoyage(){
     for (int i= 0; i < lesVoyages.size();i++){
         cout<<lesVoyages[i].getTermDeb()<<": ";
-        cout<<lesVoyages[i].getHeureDeb()<<" --> ";
+        cout<<lesVoyages[i].HeureDeb.tm_hour<<":"<<lesVoyages[i].HeureDeb.tm_min<<" --> ";
         cout<<lesVoyages[i].getTermFin()<<": ";
-        cout<<lesVoyages[i].getHeureFin()<<"   distance : ";
+        cout<<lesVoyages[i].HeureFin.tm_hour<<":"<<lesVoyages[i].HeureFin.tm_min<<"   distance : ";
         cout<<lesVoyages[i].getDistance()<<"  Voyage: ";
         cout<<lesVoyages[i].getName()<<endl;;
     }

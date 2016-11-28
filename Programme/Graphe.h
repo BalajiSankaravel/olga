@@ -16,9 +16,11 @@ class Graphe {
 public:
     Graphe(int);
     void CreationEtat(vector <Ligne>*);
-    vector<Etat> lesEtats;
-    vector<Etat> DepotDepart;
-    vector<Etat> DepotArrive;
+    void GenerationEtatSameLine();
+    void GenerationetatMultiLine();
+    vector<Etat*> lesEtats;
+    vector<Etat*> DepotDepart;
+    vector<Etat*> DepotArrive;
     
 };
 

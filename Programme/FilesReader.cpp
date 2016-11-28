@@ -90,7 +90,6 @@ vector<T_UneLigne>  FilesReader::extractHoraire(string lesInformations) {
         stringstream lineStream(line);
         string cell;
         while (getline(lineStream, cell, ',')) {
-
             switch (etape) {
                 case 1:
                     uneLigne.Nom = cell;

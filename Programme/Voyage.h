@@ -5,11 +5,12 @@
  * Created on 27 novembre 2016, 15:25
  */
 
-#include <string>
-using namespace std;
 #ifndef VOYAGE_H
 #define	VOYAGE_H
 
+#include <string>
+#include <vector>
+using namespace std;
 
 class Voyage {
 public:
@@ -19,16 +20,16 @@ public:
     void setDistance(int);
     void setTermDeb(string);
     void setHeureDeb(string);
+    void split(const string&, char, vector<string> &);
+    vector<string> split(const string &, char);
     string getTermDeb();
-    string getHeureDeb();
     string getTermFin();
-    string getHeureFin();
     int getDistance();
     string getName();
     string TermDeb;
     string TermFin;
-    string HeureDeb;
-    string HeureFin;
+    tm HeureDeb;
+    tm HeureFin;
     string name;
     int distance;
 
