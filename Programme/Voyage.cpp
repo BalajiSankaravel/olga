@@ -7,10 +7,11 @@
 
 #include "Voyage.h"
 
-Voyage::Voyage(string terminus, string heure, int dist) {
+Voyage::Voyage(string terminus, string heure, int dist,string pName) {
     TermDeb = terminus;
     HeureDeb = heure;
     distance = dist;
+    name = pName;
 }
 
 void Voyage::setTermFin(string terminus) {
@@ -51,5 +52,9 @@ string Voyage::getHeureFin() {
 
 int Voyage::getDistance() {
     return distance;
+}
+
+string Voyage::getName(){
+    return name;
 }
 

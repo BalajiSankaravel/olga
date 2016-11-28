@@ -22,8 +22,13 @@ bool Ligne::getAller(){
     return aller;
 }
 
-void Ligne::ajoutVoyage(string terminus, string heure,int dist){
-    lesVoyages.push_back(Voyage(terminus,heure,dist));
+void Ligne::ajoutVoyage(string terminus, string heure,int dist,int index){
+    char sens = 'r';
+    if(aller) sens = 'a';
+    string numLigne = name;
+    numLigne = numLigne.replace( 1, 5,"");
+    string nom = numLigne +':'+sens+':'+'v'+ to_string(index+1);
+    lesVoyages.push_back(Voyage(terminus,heure,dist,nom));
 }
 
 void Ligne::modificationArrivee(string terminus, string heure,int index){
@@ -43,6 +48,7 @@ void Ligne::afficheLesVoyage(){
         cout<<lesVoyages[i].getHeureDeb()<<" --> ";
         cout<<lesVoyages[i].getTermFin()<<": ";
         cout<<lesVoyages[i].getHeureFin()<<"   distance : ";
-        cout<<lesVoyages[i].getDistance()<<endl;
+        cout<<lesVoyages[i].getDistance()<<"  Voyage: ";
+        cout<<lesVoyages[i].getName()<<endl;;
     }
 }

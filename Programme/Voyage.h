@@ -13,7 +13,7 @@ using namespace std;
 
 class Voyage {
 public:
-    Voyage(string,string,int);
+    Voyage(string,string,int,string);
     void setTermFin(string);
     void setHeureFin(string);
     void setDistance(int);
@@ -24,12 +24,14 @@ public:
     string getTermFin();
     string getHeureFin();
     int getDistance();
+    string getName();
     
 protected:
     string TermDeb;
     string TermFin;
     string HeureDeb;
     string HeureFin;
+    string name;
     int distance;
 
 };

@@ -16,7 +16,7 @@ public:
     Ligne(string,bool);
     string getName();
     bool getAller();
-    void ajoutVoyage(string,string,int);
+    void ajoutVoyage(string,string,int,int);
     void afficheLesVoyage();
     void modificationArrivee(string,string,int);
     void modificationDepart(string,string,int);

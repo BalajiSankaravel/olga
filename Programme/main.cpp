@@ -32,7 +32,7 @@ vector<Ligne> generationDesLignes(vector <T_UneLigne> lesHoraires) {
             for (int z = 0; z < lesHoraires[i].Horaire[j].size(); z++) {
                 if (lesHoraires[i].Horaire[j][z] != "") {
                     if (validTrajet[z] == 0) {
-                        lesLignes[i].ajoutVoyage(lesHoraires[i].Terminus[j], lesHoraires[i].Horaire[j][z],lesHoraires[i].Distance[z]);
+                        lesLignes[i].ajoutVoyage(lesHoraires[i].Terminus[j], lesHoraires[i].Horaire[j][z],lesHoraires[i].Distance[z],z);
                         validTrajet[z] = 2;
                     } else if (validTrajet[z] == 1) {
                         lesLignes[i].modificationDepart(lesHoraires[i].Terminus[j], lesHoraires[i].Horaire[j][z], z);
@@ -42,7 +42,7 @@ vector<Ligne> generationDesLignes(vector <T_UneLigne> lesHoraires) {
                     }
                 } else {
                     if (validTrajet[z] == 0) {
-                        lesLignes[i].ajoutVoyage("", "",lesHoraires[i].Distance[z]);
+                        lesLignes[i].ajoutVoyage("", "",lesHoraires[i].Distance[z],z);
                         validTrajet[z] = 1;
                     }
                 }
@@ -77,7 +77,8 @@ int main(int argc, char** argv) {
     
 
     /*Creation Graphe*/
- 
+    
+    
 
     return 0;
 }
