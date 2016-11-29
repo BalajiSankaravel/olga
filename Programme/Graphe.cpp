@@ -166,11 +166,20 @@ vector < vector < Etat*> >  Graphe::Resolution(int* temps, int* distance){
         while(!listeArrive){
             int indexC = GestionCheminSuivant(Bus,tabou);
             if(indexC < 0) exit(0);
-            trajetBus.push_back(Bus->LesChemins[indexC]);
+            
+            *distance += (*matriceDist)[stoi(RemFirstChar(Bus->voyage->TermDeb))][stoi(RemFirstChar(Bus->voyage->TermFin))];
+            int i = (*matriceTemps)[stoi(RemFirstChar(Bus->voyage->TermDeb))][stoi(RemFirstChar(Bus->voyage->TermFin))];
+            if (i < 5) i = 5;
+            *temps += i;
             
             *distance += (*matriceDist)[stoi(RemFirstChar(Bus->voyage->TermFin))][stoi(RemFirstChar(Bus->LesChemins[indexC]->voyage->TermDeb))];
-            *temps += (*matriceTemps)[stoi(RemFirstChar(Bus->voyage->TermFin))][stoi(RemFirstChar(Bus->LesChemins[indexC]->voyage->TermDeb))];
+            i = (*matriceTemps)[stoi(RemFirstChar(Bus->voyage->TermFin))][stoi(RemFirstChar(Bus->LesChemins[indexC]->voyage->TermDeb))];
+            if (i < 5) i = 5;
+            *temps += i;            
+            
+            trajetBus.push_back(Bus->LesChemins[indexC]);
             Bus = Bus->LesChemins[indexC];
+            
             bool nonTabou = false;
             for (auto i : DepotArrive){
                 if(Bus == i) listeArrive = true;
