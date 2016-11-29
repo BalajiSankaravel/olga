@@ -30,6 +30,7 @@ private:
     int numero;
     int depotdepart;
     vector< Voyage* > itineraire;
+    int tauxUtilisation;
 };
 
 #endif /* BUS_H */

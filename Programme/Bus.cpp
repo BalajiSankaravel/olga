@@ -19,6 +19,7 @@ Bus::Bus() {
 Bus::Bus(int numero, int depotdepart) {
     this->numero = numero;
     this->depotdepart = depotdepart;
+    this->tauxUtilisation = 0;
 }
 
 void Bus::pushVoyage(Voyage* voy) {
