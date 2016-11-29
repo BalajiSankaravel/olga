@@ -10,6 +10,9 @@
 #include "Ligne.h"
 #include "Graphe.h"
 #include <string>
+#include "Voyage.h"
+#include "Bus.h"
+#include "SolutionWriter.h"
 
 
 using namespace std;
@@ -55,6 +58,7 @@ vector<Ligne> generationDesLignes(vector <T_UneLigne> lesHoraires) {
 int main(int argc, char** argv) {
 
     FilesReader leFichier;
+    srand(time(NULL)); 
 
     /*Recuperation des informations dans les fichiers*/
     string contenu = leFichier.OpenFile("horaires.csv");
@@ -67,13 +71,27 @@ int main(int argc, char** argv) {
     vector <vector<int> > lesDistTerminus = leFichier.createMatrice(contenu);
 
     /*Creation des Voyages*/
-    vector <Ligne> lesLignes = generationDesLignes(lesHoraires);
-    
+    vector <Ligne> lesLignes = generationDesLignes(lesHoraires);    
     Graphe leGraphe(1,&lesTempsTerminus,&lesDistTerminus);
     leGraphe.CreationEtat(&lesLignes);
-    leGraphe.GenerationArcMemeLigne();
+    leGraphe.GenerationArcLigneDiff();
+    int nbMin = 80000000;
+    int distance = 0;
+    int temps = 0;
+    vector < vector <Etat*> > resolution = leGraphe.Resolution(&temps,&distance);
     
-//    
+    vector< Bus*> lesBus;
+    for (int i = 0; i < resolution.size(); i++){
+          Bus* bus = new Bus(i,0);
+          for (int j = 1; j < resolution[i].size()-1; j++){
+            bus->pushVoyage(resolution[i][j]->voyage);     
+        }
+          lesBus.push_back(bus);
+    }
+   
+    SolutionWriter sw(lesBus.size(),temps,distance);
+    sw.write(lesBus);
+    
 //    for (int i = 0; i < lesLignes.size(); i++) {
 //        cout<<lesLignes[i].getName()<<endl;
 //        lesLignes[i].afficheLesVoyage();

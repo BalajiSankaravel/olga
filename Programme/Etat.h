@@ -18,7 +18,7 @@ public:
     Etat(Voyage*);
     string getName();
     Voyage* voyage;
-    vector<Voyage*> LesChemins;
+    vector<Etat*> LesChemins;
     
 };
 

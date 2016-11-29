@@ -21,6 +21,8 @@ public:
     void GenerationArcMemeLigne();
     void GenerationArcLigneDiff();
     string RemFirstChar(string);
+    vector < vector < Etat*> > Resolution(int*,int*);
+    int GestionCheminSuivant(Etat*,vector <Etat*>);
     void split(const std::string &s, char delim, std::vector<std::string> &elems);
     vector<string> split(const std::string &s, char delim);
     vector<Etat*> lesEtats;
