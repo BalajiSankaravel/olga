@@ -34,6 +34,14 @@ void Bus::setDepot(int depot){
     this->depotdepart = depot;
 }
 
+void Bus::setTauxUtilisation(int tauxUtilisation){
+    this->tauxUtilisation = tauxUtilisation;
+}
+
+int Bus::getTauxUtilisation(){
+    return this->tauxUtilisation;
+}
+
 string Bus::getText(){
     string text = "bus" + to_string(numero) + "," + to_string(depotdepart);
     for (auto elem : itineraire) {

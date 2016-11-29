@@ -25,6 +25,8 @@ public:
     void pushVoyage(Voyage* voy);
     void setDepot(int depot);
     void setNumero(int numero);
+    void setTauxUtilisation(int tauxUtilisation);
+    int getTauxUtilisation();
     string getText();
 private:
     int numero;
