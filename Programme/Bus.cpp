@@ -19,11 +19,15 @@ Bus::Bus() {
 Bus::Bus(int numero, int depotdepart) {
     this->numero = numero;
     this->depotdepart = depotdepart;
-    this->tauxUtilisation = 0;
+    this->tauxUtilisation = 0.0;
 }
 
 void Bus::pushVoyage(Voyage* voy) {
     this->itineraire.push_back(voy);
+}
+
+vector<Voyage *> Bus::getItineraire(){
+    return this->itineraire;
 }
 
 void Bus::setNumero(int numero){
@@ -34,11 +38,11 @@ void Bus::setDepot(int depot){
     this->depotdepart = depot;
 }
 
-void Bus::setTauxUtilisation(int tauxUtilisation){
+void Bus::setTauxUtilisation(float tauxUtilisation){
     this->tauxUtilisation = tauxUtilisation;
 }
 
-int Bus::getTauxUtilisation(){
+float Bus::getTauxUtilisation(){
     return this->tauxUtilisation;
 }
 
