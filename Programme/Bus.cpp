@@ -47,7 +47,7 @@ float Bus::getTauxUtilisation(){
 }
 
 string Bus::getText(){
-    string text = "bus" + to_string(numero) + "," + to_string(depotdepart);
+    string text = "bus" + to_string(numero) + "," + "T" + to_string(depotdepart);
     for (auto elem : itineraire) {
         text += "," + elem->getName();
     }
