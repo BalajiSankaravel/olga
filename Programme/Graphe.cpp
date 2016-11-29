@@ -22,6 +22,7 @@ Graphe::Graphe(int nbDepot, vector <vector<int> >* pTemps, vector <vector<int> >
         unDepot->HeureDeb.tm_min = 0;
         unDepot->HeureFin.tm_hour = 0;
         unDepot->HeureFin.tm_min = 0;
+        unDepot->distance = 0;
         DepotDepart.push_back(new Etat(unDepot));
         DepotArrive.push_back(new Etat(unDepot));
     }
@@ -171,15 +172,19 @@ vector < vector < Etat*> >  Graphe::Resolution(int* temps, int* distance){
             int indexC = GestionCheminSuivant(Bus,tabou);
             if(indexC < 0) exit(0);
             *distance += Bus->voyage->distance;
-            *temps += (Bus->voyage->HeureFin.tm_hour * 60 + Bus->voyage->HeureFin.tm_min) - (Bus->voyage->HeureDeb.tm_hour * 60 + Bus->voyage->HeureDeb.tm_min);
-            
+            cout<<"Temps 1: "<<(Bus->voyage->HeureFin.tm_hour * 60 + Bus->voyage->HeureFin.tm_min) - (Bus->voyage->HeureDeb.tm_hour * 60 + Bus->voyage->HeureDeb.tm_min);
             *distance += (*matriceDist)[stoi(RemFirstChar(Bus->voyage->TermFin))][stoi(RemFirstChar(Bus->LesChemins[indexC]->voyage->TermDeb))];
-            int i = (Bus->LesChemins[indexC]->voyage->HeureDeb.tm_hour * 60 + Bus->LesChemins[indexC]->voyage->HeureDeb.tm_min) - (Bus->voyage->HeureFin.tm_hour * 60 + Bus->voyage->HeureFin.tm_min);
-            if (i < 5) i = 5;
-            *temps += i;            
+            if(Bus->voyage->name == "Depot0" || Bus->LesChemins[indexC]->voyage->name == "Depot0"){
+                *temps += (*matriceTemps)[stoi(RemFirstChar(Bus->voyage->TermFin))][stoi(RemFirstChar(Bus->LesChemins[indexC]->voyage->TermDeb))];
+                
+            }else{
+                *temps += (Bus->voyage->HeureFin.tm_hour * 60 + Bus->voyage->HeureFin.tm_min) - (Bus->voyage->HeureDeb.tm_hour * 60 + Bus->voyage->HeureDeb.tm_min);
+                int i = (Bus->LesChemins[indexC]->voyage->HeureDeb.tm_hour * 60 + Bus->LesChemins[indexC]->voyage->HeureDeb.tm_min) - (Bus->voyage->HeureFin.tm_hour * 60 + Bus->voyage->HeureFin.tm_min);
+                if (i < 5) i = 5;
+                *temps += i;
+            }
            
             cout << "voyage : " << Bus->voyage->name  << " : " << Bus->voyage->distance << " " << (Bus->voyage->HeureFin.tm_hour * 60 + Bus->voyage->HeureFin.tm_min)  - (Bus->voyage->HeureDeb.tm_hour * 60 + Bus->voyage->HeureDeb.tm_min) << endl;
-            cout << "transition : " << (*matriceDist)[stoi(RemFirstChar(Bus->voyage->TermFin))][stoi(RemFirstChar(Bus->LesChemins[indexC]->voyage->TermDeb))] << " " << i << endl << endl;
             trajetBus.push_back(Bus->LesChemins[indexC]);
             Bus = Bus->LesChemins[indexC];
             
