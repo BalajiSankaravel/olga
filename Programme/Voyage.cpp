@@ -7,12 +7,35 @@
 
 #include "Voyage.h"
 #include <ctime>
+#include <iostream>
+#include <sstream>
+#include <string>
 
-Voyage::Voyage(string terminus, string heure, int dist,string pName) {
+using namespace std;
+
+Voyage::Voyage(string terminus, string heure, int dist, string pName) {
     TermDeb = terminus;
-    HeureDeb = heure;
+    if (heure != "") {
+        HeureDeb.tm_hour = atoi(this->split(heure, ':')[0].c_str());
+        HeureDeb.tm_min = atoi(this->split(heure, ':')[1].c_str());
+    }
     distance = dist;
     name = pName;
+}
+
+void Voyage::split(const std::string &s, char delim, std::vector<std::string> &elems) {
+    std::stringstream ss;
+    ss.str(s);
+    std::string item;
+    while (std::getline(ss, item, delim)) {
+        elems.push_back(item);
+    }
+}
+
+vector<string> Voyage::split(const std::string &s, char delim) {
+    std::vector<std::string> elems;
+    split(s, delim, elems);
+    return elems;
 }
 
 void Voyage::setTermFin(string terminus) {
@@ -22,13 +45,19 @@ void Voyage::setTermFin(string terminus) {
 void Voyage::setTermDeb(string terminus) {
     TermDeb = terminus;
 }
+
 void Voyage::setHeureDeb(string heure) {
-    HeureDeb = heure;
+    if (heure != "") {
+        HeureDeb.tm_hour = atoi(this->split(heure, ':')[0].c_str());
+        HeureDeb.tm_min = atoi(this->split(heure, ':')[1].c_str());
+    }
 }
 
-
 void Voyage::setHeureFin(string heure) {
-    HeureFin = heure;
+    if (heure != "") {
+        HeureFin.tm_hour = atoi(this->split(heure, ':')[0].c_str());
+        HeureFin.tm_min = atoi(this->split(heure, ':')[1].c_str());
+    }
 }
 
 void Voyage::setDistance(int dist) {
@@ -39,23 +68,15 @@ string Voyage::getTermDeb() {
     return TermDeb;
 }
 
-string Voyage::getHeureDeb() {
-    return HeureDeb;
-}
-
 string Voyage::getTermFin() {
     return TermFin;
-}
-
-string Voyage::getHeureFin() {
-    return HeureFin;
 }
 
 int Voyage::getDistance() {
     return distance;
 }
 
-string Voyage::getName(){
+string Voyage::getName() {
     return name;
 }
 
