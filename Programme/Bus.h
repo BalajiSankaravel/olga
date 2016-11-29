@@ -14,19 +14,18 @@
 #ifndef BUS_H
 #define BUS_H
 #include <vector>
-#include <Voyage>
+#include "Voyage.h"
 
 using namespace std;
 
 class Bus {
 public:
     Bus();
-    Bus(const Bus& orig);
-    Bus::pushVoyage(Voyage voy);
-    Bus::setDepot(int depot);
-    Bus::setNumero(int numero);
-    string Bus::getText();
-    virtual ~Bus();
+    Bus(int,int);
+    void pushVoyage(Voyage* voy);
+    void setDepot(int depot);
+    void setNumero(int numero);
+    string getText();
 private:
     int numero;
     int depotdepart;

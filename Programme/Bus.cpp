@@ -21,26 +21,25 @@ Bus::Bus(int numero, int depotdepart) {
     this->depotdepart = depotdepart;
 }
 
-Bus::pushVoyage(Voyage* voy) {
+void Bus::pushVoyage(Voyage* voy) {
     this->itineraire.push_back(voy);
 }
 
-Bus::setNumero(int numero){
+void Bus::setNumero(int numero){
     this->numero = numero;
 }
 
-Bus::setDepot(int depot){
+void Bus::setDepot(int depot){
     this->depotdepart = depot;
 }
 
-Bus::getText(){
-    string text = "bus" + this->numero + "," + this->depotdepart;
-    for (Voyage elem : itineraire) {
+string Bus::getText(){
+    string text = "bus" + to_string(numero) + "," + to_string(depotdepart);
+    for (auto elem : itineraire) {
         text += "," + elem->getName();
     }
+    return text;
     
 }
 
-Bus::~Bus() {
-}
 

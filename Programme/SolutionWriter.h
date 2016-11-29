@@ -17,19 +17,20 @@
 #include <string>
 #include <ctime>
 #include <fstream>
+#include <vector>
+#include "Bus.h"
 
 using namespace std;
 
 class SolutionWriter {
 public:
     SolutionWriter();
-    SolutionWriter(int NbBus, double dureeTotal, double KmTotal);
-    SolutionWriter::write(vector <Bus*>);
-    virtual ~SolutionWriter();
+    SolutionWriter(int NbBus, int dureeTotal, int KmTotal);
+    void write(vector <Bus*>);
 private:
     int NbBus;
-    double dureeTotal, KmTotal;
-    string equipe = "# Antoine Eon, Flavien Berard, Thibaut Curbera, Jeremie Gidenne,Alexandre Bizien";
+    int dureeTotal, KmTotal;
+    string equipe = "# Antoine Eon, Flavien Berard, Thibaut Curbera, Jeremie Gidenne, Alexandre Bizien";
 };
 
 /*

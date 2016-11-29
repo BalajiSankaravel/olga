@@ -16,31 +16,30 @@
 SolutionWriter::SolutionWriter() {
 }
 
-SolutionWriter::SolutionWriter(int NbBus, double dureeTotal, double KmTotal) {
+SolutionWriter::SolutionWriter(int NbBus, int dureeTotal, int KmTotal) {
     this->NbBus = NbBus;
     this->dureeTotal = dureeTotal;
     this->KmTotal = KmTotal;
 }
 
-SolutionWriter::write(vector <Bus*> lesBus){
+void SolutionWriter::write(vector <Bus*> lesBus){
     time_t now = time(0);
     char* dt = ctime(&now);
-    string filename = "solution_" + dt + ".txt";
+    string filename = "solution_";
+    filename += dt;
+    filename += ".txt";
 
     string content = 
-            this->equipe + "\r" + 
-            this->NbBus + "," + this->dureeTotal + "," + this->KmTotal + "\r";
+            this->equipe + "\n" + 
+            to_string(NbBus) + "," + to_string(dureeTotal) + "," + to_string(KmTotal) + "\n";
     
-    for (Bus elem : lesBus) {
-        content += elem.getText() + "\n";
+    for (auto elem : lesBus) {
+        content += elem->getText() + "\n";
     }
     
     ofstream outfile (filename, std::ofstream::binary);
-    outfile.write (content,content.length());
+    outfile.write (content.c_str(),content.length());
     outfile.close();
-}
-
-SolutionWriter::~SolutionWriter() {
 }
 
 /*
