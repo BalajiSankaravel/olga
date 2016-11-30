@@ -81,15 +81,30 @@ int main(int argc, char** argv) {
     int distance = 0;
     int temps = 0;
     int nbBusMin = INT_MAX;
+    float score = 99999.99;
+    int disMin = 0;
+    int tpsMin = 0;
     vector < vector <Etat*> > resolutionMin;
-    for (int j = 1 ; j < 10; j++) {
-        leGraphe.hysteresis = j;
-        for (int i = 0; i < NOMBRE_ITERATION; i++) {
-            vector < vector <Etat*> > resolution = leGraphe.Resolution(&temps, &distance);
-            if (resolution.size() < nbBusMin) {
-                cout << "h : " << leGraphe.hysteresis << " n : " << resolution.size() << endl;
-                nbBusMin = resolution.size();
-                resolutionMin = resolution;
+    for (int k = LIMIT_MIN; k <= LIMIT_MAX; k++) {
+        leGraphe.limitation = k;
+        cout << "l : " << leGraphe.limitation << endl;
+        for (int j = 0; j <= HYSTERESIS_MAX; j++) {
+            leGraphe.hysteresis = j;
+            cout << "h : " << leGraphe.hysteresis << endl;
+            for (int i = 0; i < NOMBRE_ITERATION; i++) {
+                vector < vector <Etat*> > resolution = leGraphe.Resolution(&temps, &distance);
+                if (resolution.size() <= nbBusMin) {
+                    if ((((float) temps) * 1.5 + (float) distance) < score) {
+                        disMin = distance;
+                        tpsMin = temps;
+                        score = ((float) temps) * 1.5 + (float) distance;
+                        cout << "Sol, s : " << score << " l : " << leGraphe.limitation << " h : " << leGraphe.hysteresis << " n : " << resolution.size() << endl;
+                        nbBusMin = resolution.size();
+                        resolutionMin = resolution;
+                    }
+                }
+                distance = 0;
+                temps = 0;
             }
         }
     }
@@ -102,7 +117,7 @@ int main(int argc, char** argv) {
         lesBus.push_back(bus);
     }
 
-    SolutionWriter sw(lesBus.size(), temps, distance);
+    SolutionWriter sw(lesBus.size(), tpsMin, disMin);
     sw.write(lesBus);
 
     return 0;
