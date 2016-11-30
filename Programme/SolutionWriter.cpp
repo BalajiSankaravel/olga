@@ -1,16 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/* 
- * File:   SolutionWriter.cpp
- * Author: Alex
- * 
- * Created on 28 novembre 2016, 09:07
- */
-
 #include "SolutionWriter.h"
 
 SolutionWriter::SolutionWriter() {
@@ -25,7 +12,8 @@ SolutionWriter::SolutionWriter(int NbBus, int dureeTotal, int KmTotal) {
 void SolutionWriter::write(vector <Bus*> lesBus){
     time_t now = time(0);
     char* dt = ctime(&now);
-    string filename = "solutionEON";
+    string filename = "solution_";
+    filename += dt;
     filename += ".txt";
 
     string content = 

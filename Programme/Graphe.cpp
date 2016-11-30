@@ -270,12 +270,11 @@ int Graphe::GestionCheminSuivantGRASPDepotLast(Etat* EtatActuel, vector <Etat*> 
 
     Etat* choix;
 
-    int histeresys = GRASP_HYSTERESIS;
     if (listeTransitionEtat.size() > 0) {
-        int min = INT_MAX - histeresys;
+        int min = INT_MAX - hysteresis;
         for (int k = 0; k < listeTransitionEtat.size(); k++) {
             int temps;
-            min = (min + ((rand() % (histeresys * 2)) - histeresys));
+            min = (min + ((rand() % (hysteresis * 2)) - hysteresis));
             if (min < 0) min = 0;
             if (EtatActuel->voyage->name == "Depot0") {//TODO
                 temps = listeTransitionEtat[k]->voyage->HeureDeb.tm_hour * 60 + listeTransitionEtat[k]->voyage->HeureDeb.tm_min;
@@ -288,9 +287,9 @@ int Graphe::GestionCheminSuivantGRASPDepotLast(Etat* EtatActuel, vector <Etat*> 
             }
         }
     } else {
-        int min = INT_MAX - histeresys;
+        int min = INT_MAX - hysteresis;
         for (int k = 0; k < listeTransitionDepot.size(); k++) {
-            if ((*matriceTemps)[stoi(RemFirstChar(EtatActuel->voyage->TermFin))][stoi(RemFirstChar(listeTransitionDepot[k]->voyage->TermDeb))] < (min + ((rand() % (histeresys * 2)) - histeresys))) {
+            if ((*matriceTemps)[stoi(RemFirstChar(EtatActuel->voyage->TermFin))][stoi(RemFirstChar(listeTransitionDepot[k]->voyage->TermDeb))] < (min + ((rand() % (hysteresis * 2)) - hysteresis))) {
                 min = (*matriceTemps)[stoi(RemFirstChar(EtatActuel->voyage->TermFin))][stoi(RemFirstChar(listeTransitionDepot[k]->voyage->TermDeb))];
                 choix = listeTransitionDepot[k];
             }

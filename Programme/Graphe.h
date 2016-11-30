@@ -33,7 +33,7 @@ public:
     vector<Etat*> DepotArrive;
     vector <vector<int> >* matriceTemps;
     vector <vector<int> >* matriceDist;
-    
+    int hysteresis = 0;    
 };
 
 #endif	/* GRAPHE_H */

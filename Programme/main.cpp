@@ -82,11 +82,15 @@ int main(int argc, char** argv) {
     int temps = 0;
     int nbBusMin = INT_MAX;
     vector < vector <Etat*> > resolutionMin;
-    for (int i = 0; i < NOMBRE_ITERATION; i++) {
-        vector < vector <Etat*> > resolution = leGraphe.Resolution(&temps, &distance);
-        if (resolution.size() < nbBusMin) {
-            nbBusMin = resolution.size();
-            resolutionMin = resolution;
+    for (int j = 1 ; j < 10; j++) {
+        leGraphe.hysteresis = j;
+        for (int i = 0; i < NOMBRE_ITERATION; i++) {
+            vector < vector <Etat*> > resolution = leGraphe.Resolution(&temps, &distance);
+            if (resolution.size() < nbBusMin) {
+                cout << "h : " << leGraphe.hysteresis << " n : " << resolution.size() << endl;
+                nbBusMin = resolution.size();
+                resolutionMin = resolution;
+            }
         }
     }
     vector< Bus*> lesBus;
@@ -100,17 +104,6 @@ int main(int argc, char** argv) {
 
     SolutionWriter sw(lesBus.size(), temps, distance);
     sw.write(lesBus);
-
-    //    for (int i = 0; i < lesLignes.size(); i++) {
-    //        cout<<lesLignes[i].getName()<<endl;
-    //        lesLignes[i].afficheLesVoyage();
-    //        cout<<endl;
-    //    }
-
-
-    /*Creation Graphe*/
-
-
 
     return 0;
 }
