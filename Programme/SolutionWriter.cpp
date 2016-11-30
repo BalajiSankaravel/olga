@@ -2,20 +2,15 @@
 #include "Solution.h"
 #include <iostream>
 
-SolutionWriter::SolutionWriter() {
-}
-
-SolutionWriter::SolutionWriter() {
-
-}
-
 void SolutionWriter::write(vector <Solution*> solutions){
     time_t now = time(0);
     char* dt = ctime(&now);
-    string filename = "solution_";
+    string filename = "solutiezfezfzefon_";
     filename += dt;
     filename += ".txt";
 
+    cout << solutions.size() << endl;
+    
     if ( solutions.size() == 1 ){//// SI UN RESULTATS
         
         string content = this->equipe + "\n";

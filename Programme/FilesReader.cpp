@@ -98,7 +98,7 @@ vector<T_UneLigne>  FilesReader::extractHoraire(string lesInformations) {
                     etape = 2;
                     break;
                 case 2:
-                    if (cell[0] == 'T') {
+                    if (cell[0] != 'D') {
                         uneLigne.Terminus.push_back(cell);
                         Terminus++;
                         uneLigne.Horaire.push_back(vector<string>());

@@ -19,14 +19,12 @@
 #include <fstream>
 #include <vector>
 #include "Bus.h"
-
+#include "Solution.h"
 using namespace std;
 
 class SolutionWriter {
 public:
-    SolutionWriter();
-    SolutionWriter(int NbBus, int dureeTotal, int KmTotal);
-    void write(vector <Bus*>);
+    void write(vector <Solution*>);
 private:
     string equipe = "# Antoine Eon, Flavien Berard, Thibaut Curbera, Jeremie Gidenne, Alexandre Bizien";
 };

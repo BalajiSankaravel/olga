@@ -119,6 +119,51 @@ string Graphe::RemFirstChar(string chaine) {
     return result;
 }
 
+vector < vector < Etat*> > Graphe::ResolutionSame(int* temps, int* distance) {
+    int nbBus = 0;
+    vector <Etat*> tabou;
+    vector < vector < Etat* > > ListeBus;
+
+    while (tabou.size() < lesEtats.size()) {
+        vector < Etat* > trajetBus;
+        Etat* Bus = DepotDepart[rand() % DepotDepart.size()];
+        trajetBus.push_back(Bus);
+        nbBus++;
+        bool listeArrive = false;
+        int limit = 0;
+        while (!listeArrive) {
+            int indexC = GestionCheminSuivantGRASPDepotLastLimited(Bus, tabou, limit);
+            if (indexC < 0) exit(0);
+            limit++;
+            /////////////Distance
+
+            *distance += Bus->voyage->distance;
+            *distance += (*matriceDist)[stoi(RemFirstChar(Bus->voyage->TermFin))][stoi(RemFirstChar(Bus->LesChemins[indexC]->voyage->TermDeb))];
+
+            trajetBus.push_back(Bus->LesChemins[indexC]);
+            Bus = Bus->LesChemins[indexC];
+
+            bool nonTabou = false;
+            for (auto i : DepotArrive) {
+                if (Bus == i) listeArrive = true;
+                if (Bus == i) nonTabou = true;
+            }
+            if (!nonTabou) tabou.push_back(Bus);
+        }
+        ListeBus.push_back(trajetBus);
+    }
+    for (int i = 0; i < ListeBus.size(); i++) {
+        int tps = 0;
+        tps = (*matriceTemps)[stoi(RemFirstChar(ListeBus[i][0]->voyage->TermFin))][stoi(RemFirstChar(ListeBus[i][1]->voyage->TermDeb))];
+        tps = ((ListeBus[i][ListeBus[i].size() - 2]->voyage->HeureFin.tm_hour * 60 + ListeBus[i][ListeBus[i].size() - 2]->voyage->HeureFin.tm_min)-((ListeBus[i][1]->voyage->HeureDeb.tm_hour * 60 + ListeBus[i][1]->voyage->HeureDeb.tm_min)));
+        *temps += tps;
+        tps = (*matriceTemps)[stoi(RemFirstChar(ListeBus[i][ListeBus[i].size() - 2]->voyage->TermFin))][stoi(RemFirstChar(ListeBus[i][ListeBus[i].size() - 1]->voyage->TermDeb))];
+        *temps += tps;
+
+    }
+    return ListeBus;
+}
+
 vector < vector < Etat*> > Graphe::ResolutionMulti(int* temps, int* distance) {
     int nbBus = 0;
     vector <Etat*> tabou;

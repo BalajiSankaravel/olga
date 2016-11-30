@@ -1,11 +1,3 @@
-/* 
- * File:   main.cpp
- * Author: Flav
- *
- * Created on 25 novembre 2016, 11:06
- */
-
-
 #include "FilesReader.h"
 #include "Ligne.h"
 #include "Graphe.h"
@@ -15,15 +7,10 @@
 #include "Bus.h"
 #include "SolutionWriter.h"
 #include "PARAMETRE.h"
+#include "Solution.h"
 
 
 using namespace std;
-
-/*
- * 
- */
-
-
 
 vector<Ligne> generationDesLignes(vector <T_UneLigne> lesHoraires) {
     vector <Ligne> lesLignes;
@@ -57,27 +44,21 @@ vector<Ligne> generationDesLignes(vector <T_UneLigne> lesHoraires) {
     return lesLignes;
 }
 
-int main(int argc, char** argv) {
-
-    FilesReader leFichier;
-    srand(time(NULL));
-
+void gestionDiff(FilesReader* leFichier) {
     /*Recuperation des informations dans les fichiers*/
-    string contenu = leFichier.OpenFile("horaires.csv");
-    vector <T_UneLigne> lesHoraires = leFichier.extractHoraire(contenu);
+    string contenu = leFichier->OpenFile("horaires.csv");
+    vector <T_UneLigne> lesHoraires = leFichier->extractHoraire(contenu);
 
-    contenu = leFichier.OpenFile("terminus.csv");
-    vector <vector<int> > lesTempsTerminus = leFichier.createMatrice(contenu);
+    contenu = leFichier->OpenFile("terminus.csv");
+    vector <vector<int> > lesTempsTerminus = leFichier->createMatrice(contenu);
 
-    contenu = leFichier.OpenFile("dist_terminus.csv");
-    vector <vector<int> > lesDistTerminus = leFichier.createMatrice(contenu);
-
+    contenu = leFichier->OpenFile("dist_terminus.csv");
+    vector <vector<int> > lesDistTerminus = leFichier->createMatrice(contenu);
     /*Creation des Voyages*/
     vector <Ligne> lesLignes = generationDesLignes(lesHoraires);
     Graphe leGraphe(1, &lesTempsTerminus, &lesDistTerminus);
     leGraphe.CreationEtat(&lesLignes);
     leGraphe.GenerationArcLigneDiff();
-    int nbMin = 80000000;
     int distance = 0;
     int temps = 0;
     int nbBusMin = INT_MAX;
@@ -94,10 +75,10 @@ int main(int argc, char** argv) {
             for (int i = 0; i < NOMBRE_ITERATION; i++) {
                 vector < vector <Etat*> > resolution = leGraphe.ResolutionMulti(&temps, &distance);
                 if (resolution.size() <= nbBusMin) {
-                    if ((((float) temps) * 1.5 + (float) distance) < score) {
+                    if ((((float) temps) * (float) COEF_TEMPS + (float) distance) < score) {
                         disMin = distance;
                         tpsMin = temps;
-                        score = ((float) temps) * 1.5 + (float) distance;
+                        score = ((float) temps) * (float) COEF_TEMPS + (float) distance;
                         cout << "Sol, s : " << score << " l : " << leGraphe.limitation << " h : " << leGraphe.hysteresis << " n : " << resolution.size() << endl;
                         nbBusMin = resolution.size();
                         resolutionMin = resolution;
@@ -108,17 +89,33 @@ int main(int argc, char** argv) {
             }
         }
     }
-    vector< Bus*> lesBus;
+    vector< Bus*>* lesBus = new vector<Bus*>();
     for (int i = 0; i < resolutionMin.size(); i++) {
         Bus* bus = new Bus(i, 0);
         for (int j = 1; j < resolutionMin[i].size() - 1; j++) {
             bus->pushVoyage(resolutionMin[i][j]->voyage);
         }
-        lesBus.push_back(bus);
+        lesBus->push_back(bus);
     }
+    vector<Solution*>* v = new vector<Solution*>();
+    Solution* s = new Solution();
+    s->nbBus = lesBus->size();
+    s->KmTotal = disMin;
+    s->TpsTotal = tpsMin;
+    s->lesBus = lesBus;
+    v->push_back(s);
+    cout << (*v)[0]->getText() << endl;
+    SolutionWriter sw;
+    sw.write(*v);
+}
 
-    SolutionWriter sw(lesBus.size(), tpsMin, disMin);
-    sw.write(lesBus);
+int main(int argc, char** argv) {
+
+    FilesReader leFichier;
+    srand(time(NULL));
+    gestionDiff(&leFichier);
+    //    cout << "r";
+    cout << "-----FFN" << endl;
 
     return 0;
 }
