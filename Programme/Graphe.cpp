@@ -46,7 +46,7 @@ void Graphe::CreationEtat(vector<Ligne>* lesLignes) {
 }
 
 void Graphe::GenerationArcMemeLigne() {
-
+    typeGen = 0;
     for (auto i : lesEtats) {
         for (auto j : lesEtats) {
             if (i != j) {
@@ -72,7 +72,7 @@ void Graphe::GenerationArcMemeLigne() {
 }
 
 void Graphe::GenerationArcLigneDiff() {
-
+    typeGen = 1;
     for (auto i : lesEtats) {
         for (auto j : lesEtats) {
             if (i != j) {
@@ -119,7 +119,7 @@ string Graphe::RemFirstChar(string chaine) {
     return result;
 }
 
-vector < vector < Etat*> > Graphe::Resolution(int* temps, int* distance) {
+vector < vector < Etat*> > Graphe::ResolutionMulti(int* temps, int* distance) {
     int nbBus = 0;
     vector <Etat*> tabou;
     vector < vector < Etat* > > ListeBus;
@@ -135,7 +135,6 @@ vector < vector < Etat*> > Graphe::Resolution(int* temps, int* distance) {
             int indexC = GestionCheminSuivantGRASPDepotLastLimited(Bus, tabou, limit);
             if (indexC < 0) exit(0);
             limit++;
-
             /////////////Distance
 
             *distance += Bus->voyage->distance;
