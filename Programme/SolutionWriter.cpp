@@ -1,4 +1,5 @@
 #include "SolutionWriter.h"
+#include "Solution.h"
 #include <iostream>
 
 SolutionWriter::SolutionWriter() {
@@ -10,26 +11,43 @@ SolutionWriter::SolutionWriter(int NbBus, int dureeTotal, int KmTotal) {
     this->KmTotal = KmTotal;
 }
 
-void SolutionWriter::write(vector <Bus*> lesBus){
+void SolutionWriter::write(vector <Solution*> solutions){
     time_t now = time(0);
     char* dt = ctime(&now);
     string filename = "solution_";
     filename += dt;
     filename += ".txt";
 
-    string content = 
-            this->equipe + "\n" + 
-            to_string(NbBus) + "," + to_string(dureeTotal) + "," + to_string(KmTotal) + "\n";
-    
-    for (auto elem : lesBus) {
-        content += elem->getText() + "\n";
+    if ( solutions.size() == 1 ){//// SI UN RESULTATS
+        
+        string content = this->equipe + "\n";
+        
+        content += solutions[0]->getText();
+
+        ofstream outfile (filename, std::ofstream::binary);
+        if(!outfile) cout << "erreur lol";
+            outfile.write (content.c_str(),content.length());
+            outfile.close();
+            
     }
+    else if (solution.size() > 1){ //// SI PLUSIEURS RESULTATS
+        
+        string content = this->equipe + "\n";
+        
+        for (auto elem : solutions) {
+            content += elem->getText();
+        }
+        
+        ofstream outfile (filename, std::ofstream::binary);
+        if(!outfile) cout << "erreur lol";
+            outfile.write (content.c_str(),content.length());
+            outfile.close();
+        
+    }
+
     
-    ofstream outfile (filename, std::ofstream::binary);
-    if(!outfile) cout << "erreur lol";
-	outfile.write (content.c_str(),content.length());
-	outfile.close();
 }
+
 
 /*
     # Antoine Eon, Flavien Berard, Thibaut Curbera, Jeremie Gidenne, Alexandre Bizien
