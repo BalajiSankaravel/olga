@@ -22,8 +22,6 @@ public:
     Solution();
     Solution(int nbBus, int TpsTotal, int KmTotal, vector < Bus* > lesBus);
     string Solution::getText();
-    virtual ~Solution();
-private:
     int nbBus;
     int TpsTotal;
     int KmTotal;

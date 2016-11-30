@@ -32,6 +32,3 @@ string Solution::getText(){
     
 }
 
-Solution::~Solution() {
-}
-
