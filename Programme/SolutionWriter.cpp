@@ -5,10 +5,8 @@
 SolutionWriter::SolutionWriter() {
 }
 
-SolutionWriter::SolutionWriter(int NbBus, int dureeTotal, int KmTotal) {
-    this->NbBus = NbBus;
-    this->dureeTotal = dureeTotal;
-    this->KmTotal = KmTotal;
+SolutionWriter::SolutionWriter() {
+
 }
 
 void SolutionWriter::write(vector <Solution*> solutions){
@@ -30,7 +28,7 @@ void SolutionWriter::write(vector <Solution*> solutions){
             outfile.close();
             
     }
-    else if (solution.size() > 1){ //// SI PLUSIEURS RESULTATS
+    else if (solutions.size() > 1){ //// SI PLUSIEURS RESULTATS
         
         string content = this->equipe + "\n";
         

@@ -28,8 +28,6 @@ public:
     SolutionWriter(int NbBus, int dureeTotal, int KmTotal);
     void write(vector <Bus*>);
 private:
-    int NbBus;
-    int dureeTotal, KmTotal;
     string equipe = "# Antoine Eon, Flavien Berard, Thibaut Curbera, Jeremie Gidenne, Alexandre Bizien";
 };
 
