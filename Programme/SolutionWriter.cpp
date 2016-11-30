@@ -12,6 +12,7 @@
  */
 
 #include "SolutionWriter.h"
+#include <iostream>
 
 SolutionWriter::SolutionWriter() {
 }
@@ -38,8 +39,9 @@ void SolutionWriter::write(vector <Bus*> lesBus){
     }
     
     ofstream outfile (filename, std::ofstream::binary);
-    outfile.write (content.c_str(),content.length());
-    outfile.close();
+    if(!outfile) cout << "erreur lol";
+	outfile.write (content.c_str(),content.length());
+	outfile.close();
 }
 
 /*
