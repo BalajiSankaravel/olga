@@ -131,7 +131,7 @@ vector < vector < Etat*> > Graphe::Resolution(int* temps, int* distance) {
         nbBus++;
         bool listeArrive = false;
         while (!listeArrive) {
-            int indexC = GestionCheminSuivantGRASPDepotLast(Bus, tabou);
+            int indexC = GestionCheminSuivantGloutonDepotLast(Bus, tabou);
             if (indexC < 0) exit(0);
 
             /////////////Distance
