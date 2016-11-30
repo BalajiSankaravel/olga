@@ -1,16 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/* 
- * File:   SolutionWriter.cpp
- * Author: Alex
- * 
- * Created on 28 novembre 2016, 09:07
- */
-
 #include "SolutionWriter.h"
 #include <iostream>
 

@@ -8,7 +8,8 @@
 #include "Graphe.h"
 #include <iostream>
 #include <sstream>
-
+#include <limits.h>
+#include "PARAMETRE.h"
 using namespace std;
 
 Graphe::Graphe(int nbDepot, vector <vector<int> >* pTemps, vector <vector<int> >* pDist) {
@@ -18,12 +19,13 @@ Graphe::Graphe(int nbDepot, vector <vector<int> >* pTemps, vector <vector<int> >
         Voyage* unDepot = new Voyage("", "", 0, "Depot" + to_string(i));
         unDepot->TermDeb = "T0";
         unDepot->TermFin = "T0";
+        unDepot->HeureDeb.tm_hour = 0;
+        unDepot->HeureDeb.tm_min = 0;
+        unDepot->HeureFin.tm_hour = 0;
+        unDepot->HeureFin.tm_min = 0;
+        unDepot->distance = 0;
         DepotDepart.push_back(new Etat(unDepot));
         DepotArrive.push_back(new Etat(unDepot));
-    }
-    for (int i = 0; i < DepotDepart.size(); i++) {
-        cout << "Depart " << DepotDepart[i]->voyage->getName() << endl;
-        cout << "Arrive " << DepotArrive[i]->voyage->getName() << endl;
     }
 }
 
@@ -40,21 +42,6 @@ void Graphe::CreationEtat(vector<Ligne>* lesLignes) {
             lesEtats[i]->LesChemins.push_back(DepotArrive[z]);
         }
     }
-
-
-
-    //    for (int i = 0; i < lesEtats.size(); i++) {
-    //        cout << "n : " << lesEtats[i]->voyage->name << endl;
-    //        cout << "Depart : " << lesEtats[i]->voyage->TermDeb << endl;
-    //        cout << lesEtats[i]->voyage->HeureDeb.tm_hour;
-    //        cout << "h" << lesEtats[i]->voyage->HeureDeb.tm_min << endl;
-    //        cout << "Arrive : " << lesEtats[i]->voyage->TermFin << endl;
-    //        cout << lesEtats[i]->voyage->HeureFin.tm_hour;
-    //        cout << "h" << lesEtats[i]->voyage->HeureFin.tm_min << endl;
-    //        cout << "dist : " << lesEtats[i]->voyage->distance << endl << endl;
-    //    }
-    //   cout << "nb : " << lesEtats.size();
-
 
 }
 
@@ -82,15 +69,6 @@ void Graphe::GenerationArcMemeLigne() {
             }
         }
     }
-//    int arc = 0;
-//    for (auto i : lesEtats) {
-//        cout << "Etat : " << i->getName() << endl;
-//        for (auto j : i->LesChemins) {
-//            arc++;
-//            cout << "Arc : " << j->voyage->name << endl;
-//        }
-//    }
-//    cout << "Nb arc : " << arc << endl;
 }
 
 void Graphe::GenerationArcLigneDiff() {
@@ -104,9 +82,9 @@ void Graphe::GenerationArcLigneDiff() {
                 } else {
                     int l = (*matriceTemps)[stoi(RemFirstChar(i->voyage->TermFin))]
                             [stoi(RemFirstChar(j->voyage->TermDeb))];
-                    
+
                     if (l < 5) l = 5;
-                   
+
                     if ((j->voyage->HeureDeb.tm_hour * 60 + j->voyage->HeureDeb.tm_min - l) -
                             ((i->voyage->HeureFin.tm_hour * 60 + i->voyage->HeureFin.tm_min)
                             ) >= 0) {
@@ -116,16 +94,6 @@ void Graphe::GenerationArcLigneDiff() {
             }
         }
     }
-    
-//        int arc = 0;
-//        for (auto i : lesEtats) {
-//            cout << "Etat : " << i->getName() << endl;
-//            for (auto j : i->LesChemins) {
-//                arc++;
-//                cout << "Arc : " << j->voyage->name << endl;
-//            }
-//        }
-//        cout<<"Nb arc : "<<arc<<endl;
 }
 
 void Graphe::split(const std::string &s, char delim, std::vector<std::string> &elems) {
@@ -151,87 +119,319 @@ string Graphe::RemFirstChar(string chaine) {
     return result;
 }
 
-
-vector < vector < Etat*> >  Graphe::Resolution(int* temps, int* distance){
+vector < vector < Etat*> > Graphe::Resolution(int* temps, int* distance) {
     int nbBus = 0;
     vector <Etat*> tabou;
     vector < vector < Etat* > > ListeBus;
-    
-    while(tabou.size() < lesEtats.size()){
+
+    while (tabou.size() < lesEtats.size()) {
         vector < Etat* > trajetBus;
-        Etat* Bus = DepotDepart[rand() % DepotDepart.size()];     
+        Etat* Bus = DepotDepart[rand() % DepotDepart.size()];
         trajetBus.push_back(Bus);
         nbBus++;
         bool listeArrive = false;
-        while(!listeArrive){
-            int indexC = GestionCheminSuivant(Bus,tabou);
-            if(indexC < 0) exit(0);
-            
-            *distance += (*matriceDist)[stoi(RemFirstChar(Bus->voyage->TermDeb))][stoi(RemFirstChar(Bus->voyage->TermFin))];
-            int i = (*matriceTemps)[stoi(RemFirstChar(Bus->voyage->TermDeb))][stoi(RemFirstChar(Bus->voyage->TermFin))];
-            if (i < 5) i = 5;
-            *temps += i;
-            
+        int limit = 0;
+        while (!listeArrive) {
+            int indexC = GestionCheminSuivantGRASPDepotLastLimited(Bus, tabou, limit);
+            if (indexC < 0) exit(0);
+            limit++;
+
+            /////////////Distance
+
+            *distance += Bus->voyage->distance;
             *distance += (*matriceDist)[stoi(RemFirstChar(Bus->voyage->TermFin))][stoi(RemFirstChar(Bus->LesChemins[indexC]->voyage->TermDeb))];
-            i = (*matriceTemps)[stoi(RemFirstChar(Bus->voyage->TermFin))][stoi(RemFirstChar(Bus->LesChemins[indexC]->voyage->TermDeb))];
-            if (i < 5) i = 5;
-            *temps += i;            
-            
+
             trajetBus.push_back(Bus->LesChemins[indexC]);
             Bus = Bus->LesChemins[indexC];
-            
+
             bool nonTabou = false;
-            for (auto i : DepotArrive){
-                if(Bus == i) listeArrive = true;
-                if(Bus == i ) nonTabou = true;
+            for (auto i : DepotArrive) {
+                if (Bus == i) listeArrive = true;
+                if (Bus == i) nonTabou = true;
             }
             if (!nonTabou) tabou.push_back(Bus);
         }
         ListeBus.push_back(trajetBus);
     }
-//    for(int i = 0; i <  ListeBus.size(); i++){
-//        cout<<"Bus: "<<i<<endl;
-//        for(int j = 0; j <  ListeBus[i].size(); j++){
-//            cout<<"Trajet "<<j<<": "<<ListeBus[i][j]->voyage->name<<endl;
-//        }
-//    }
+    for (int i = 0; i < ListeBus.size(); i++) {
+        int tps = 0;
+        //        for (int j = 0; j < ListeBus[i].size(); j++) {
+        //            cout << ListeBus[i][j]->voyage->name << " ";
+        //        }
+        tps = (*matriceTemps)[stoi(RemFirstChar(ListeBus[i][0]->voyage->TermFin))][stoi(RemFirstChar(ListeBus[i][1]->voyage->TermDeb))];
+        *temps += tps;
+        //cout << endl << "matrice[" << stoi(RemFirstChar(ListeBus[i][0]->voyage->TermFin)) << "][" << stoi(RemFirstChar(ListeBus[i][1]->voyage->TermDeb)) << "] = " << tps << endl;
+        tps = ((ListeBus[i][ListeBus[i].size() - 2]->voyage->HeureFin.tm_hour * 60 + ListeBus[i][ListeBus[i].size() - 2]->voyage->HeureFin.tm_min)-((ListeBus[i][1]->voyage->HeureDeb.tm_hour * 60 + ListeBus[i][1]->voyage->HeureDeb.tm_min)));
+        *temps += tps;
+        //cout << "((" << (ListeBus[i][ListeBus[i].size() - 2]->voyage->HeureFin.tm_hour * 60) << " + " << (ListeBus[i][ListeBus[i].size() - 2]->voyage->HeureFin.tm_min) << ") - (" << (ListeBus[i][1]->voyage->HeureDeb.tm_hour * 60) << " + " << (ListeBus[i][1]->voyage->HeureDeb.tm_min) << " = " << tps << endl;
+        tps = (*matriceTemps)[stoi(RemFirstChar(ListeBus[i][ListeBus[i].size() - 2]->voyage->TermFin))][stoi(RemFirstChar(ListeBus[i][ListeBus[i].size() - 1]->voyage->TermDeb))];
+        *temps += tps;
+        //cout << "matrice[" << stoi(RemFirstChar(ListeBus[i][0]->voyage->TermFin)) << "][" << stoi(RemFirstChar(ListeBus[i][1]->voyage->TermDeb)) << "] = " << tps << endl << endl;
+
+    }
+    //cout << "nb Bus: " << ListeBus.size() << endl;
+    //cout << "total : " << *temps << endl;
     return ListeBus;
 }
 
-int Graphe::GestionCheminSuivant(Etat* EtatActuel,vector <Etat*> listeTabou){
+int Graphe::getTempsDiff(Etat* a, Etat* b) {
+    int i = (a->voyage->HeureFin.tm_hour * 60 + a->voyage->HeureFin.tm_min)-(b->voyage->HeureDeb.tm_hour * 60 + b->voyage->HeureDeb.tm_min);
+    if (i < 0) {
+        cout << " ! ! ! Erreur temps entre " << a->voyage->name << " et " << b->voyage->name << endl;
+        exit(0);
+    }
+    return i;
+}
+
+int Graphe::GestionCheminSuivantGloutonDepotLast(Etat* EtatActuel, vector <Etat*> listeTabou) {
     //Verification des transitions
     vector <Etat*> listeTransitionDepot;
     vector <Etat*> listeTransitionEtat;
-    for(int i = 0; i < EtatActuel->LesChemins.size(); i++){
+    for (int i = 0; i < EtatActuel->LesChemins.size(); i++) {
         bool trouve = false;
-        for(int j = 0; j < listeTabou.size(); j++){
-            if(EtatActuel->LesChemins[i] == listeTabou[j]){
+        for (int j = 0; j < listeTabou.size(); j++) {
+            if (EtatActuel->LesChemins[i] == listeTabou[j]) {
                 trouve = true;
             }
         }
-        if(trouve == false){
+        if (trouve == false) {
             bool arrive = false;
-            for(int j = 0; j < DepotArrive.size(); j++){
-                if(EtatActuel->LesChemins[i] == DepotArrive[j]){
+            for (int j = 0; j < DepotArrive.size(); j++) {
+                if (EtatActuel->LesChemins[i] == DepotArrive[j]) {
                     arrive = true;
-                } 
+                }
             }
-            if(arrive == true){
+            if (arrive == true) {
                 listeTransitionDepot.push_back(EtatActuel->LesChemins[i]);
-            }else{
+            } else {
                 listeTransitionEtat.push_back(EtatActuel->LesChemins[i]);
             }
         }
     }
-    
+
     Etat* choix;
-    if(listeTransitionEtat.size() > 0){
+
+    if (listeTransitionEtat.size() > 0) {
+        int min = INT_MAX;
+        for (int k = 0; k < listeTransitionEtat.size(); k++) {
+            int temps;
+            if (EtatActuel->voyage->name == "Depot0") {//TODO
+                temps = listeTransitionEtat[k]->voyage->HeureDeb.tm_hour * 60 + listeTransitionEtat[k]->voyage->HeureDeb.tm_min;
+            } else {
+                temps = getTempsDiff(listeTransitionEtat[k], EtatActuel);
+            }
+
+            if (temps < min) {
+                min = temps;
+                choix = listeTransitionEtat[k];
+            }
+        }
+    } else {
+        int min = INT_MAX;
+        for (int k = 0; k < listeTransitionDepot.size(); k++) {
+            if ((*matriceTemps)[stoi(RemFirstChar(EtatActuel->voyage->TermFin))][stoi(RemFirstChar(listeTransitionDepot[k]->voyage->TermDeb))] < min) {
+                min = (*matriceTemps)[stoi(RemFirstChar(EtatActuel->voyage->TermFin))][stoi(RemFirstChar(listeTransitionDepot[k]->voyage->TermDeb))];
+                choix = listeTransitionDepot[k];
+            }
+        }
+    }
+    for (int i = 0; EtatActuel->LesChemins.size(); i++) {
+        if (EtatActuel->LesChemins[i] == choix) {
+
+            return i;
+        }
+    }
+    return -1;
+}
+
+int Graphe::GestionCheminSuivantGRASPDepotLast(Etat* EtatActuel, vector <Etat*> listeTabou) {
+    //Verification des transitions
+    vector <Etat*> listeTransitionDepot;
+    vector <Etat*> listeTransitionEtat;
+    for (int i = 0; i < EtatActuel->LesChemins.size(); i++) {
+        bool trouve = false;
+        for (int j = 0; j < listeTabou.size(); j++) {
+            if (EtatActuel->LesChemins[i] == listeTabou[j]) {
+                trouve = true;
+            }
+        }
+        if (trouve == false) {
+            bool arrive = false;
+            for (int j = 0; j < DepotArrive.size(); j++) {
+                if (EtatActuel->LesChemins[i] == DepotArrive[j]) {
+                    arrive = true;
+                }
+            }
+            if (arrive == true) {
+                listeTransitionDepot.push_back(EtatActuel->LesChemins[i]);
+            } else {
+                listeTransitionEtat.push_back(EtatActuel->LesChemins[i]);
+            }
+        }
+    }
+
+    Etat* choix;
+
+    if (listeTransitionEtat.size() > 0) {
+        int min = INT_MAX - hysteresis;
+        for (int k = 0; k < listeTransitionEtat.size(); k++) {
+            int temps;
+            int random = 0;
+            if (hysteresis == 0) {
+                random = 0;
+            } else {
+                random = ((rand() % (hysteresis * 2)) - hysteresis);
+            }
+            min = (min + random);
+            if (min < 0) min = 0;
+            if (EtatActuel->voyage->name == "Depot0") {//TODO
+                temps = listeTransitionEtat[k]->voyage->HeureDeb.tm_hour * 60 + listeTransitionEtat[k]->voyage->HeureDeb.tm_min;
+            } else {
+                temps = getTempsDiff(listeTransitionEtat[k], EtatActuel);
+            }
+            if (temps < min) {
+                min = temps;
+                choix = listeTransitionEtat[k];
+            }
+        }
+    } else {
+        int min = INT_MAX - hysteresis;
+        for (int k = 0; k < listeTransitionDepot.size(); k++) {
+            int random = 0;
+            if (hysteresis == 0) {
+                random = 0;
+            } else {
+                random = ((rand() % (hysteresis * 2)) - hysteresis);
+            }
+            min = (min + random);
+            if (min < 0) min = 0;
+            if ((*matriceTemps)[stoi(RemFirstChar(EtatActuel->voyage->TermFin))][stoi(RemFirstChar(listeTransitionDepot[k]->voyage->TermDeb))] < min) {
+                min = (*matriceTemps)[stoi(RemFirstChar(EtatActuel->voyage->TermFin))][stoi(RemFirstChar(listeTransitionDepot[k]->voyage->TermDeb))];
+                choix = listeTransitionDepot[k];
+            }
+        }
+    }
+    for (int i = 0; EtatActuel->LesChemins.size(); i++) {
+        if (EtatActuel->LesChemins[i] == choix) {
+
+            return i;
+        }
+    }
+    return -1;
+}
+
+int Graphe::GestionCheminSuivantGRASPDepotLastLimited(Etat* EtatActuel, vector <Etat*> listeTabou, int limit) {
+    //Verification des transitions
+    vector <Etat*> listeTransitionDepot;
+    vector <Etat*> listeTransitionEtat;
+    for (int i = 0; i < EtatActuel->LesChemins.size(); i++) {
+        bool trouve = false;
+        for (int j = 0; j < listeTabou.size(); j++) {
+            if (EtatActuel->LesChemins[i] == listeTabou[j]) {
+                trouve = true;
+            }
+        }
+        if (trouve == false) {
+            bool arrive = false;
+            for (int j = 0; j < DepotArrive.size(); j++) {
+                if (EtatActuel->LesChemins[i] == DepotArrive[j]) {
+                    arrive = true;
+                }
+            }
+            if (arrive == true) {
+                listeTransitionDepot.push_back(EtatActuel->LesChemins[i]);
+            } else {
+                listeTransitionEtat.push_back(EtatActuel->LesChemins[i]);
+            }
+        }
+    }
+
+    Etat* choix;
+
+    if (limit > (limitation-1))listeTransitionEtat.clear();
+
+    if (listeTransitionEtat.size() > 0) {
+        int min = INT_MAX - hysteresis;
+        for (int k = 0; k < listeTransitionEtat.size(); k++) {
+            int temps;
+            int random = 0;
+            if (hysteresis == 0) {
+                random = 0;
+            } else {
+                random = ((rand() % (hysteresis * 2)) - hysteresis);
+            }
+            min = (min + random);
+            if (min < 0) min = 0;
+            if (EtatActuel->voyage->name == "Depot0") {//TODO
+                temps = listeTransitionEtat[k]->voyage->HeureDeb.tm_hour * 60 + listeTransitionEtat[k]->voyage->HeureDeb.tm_min;
+            } else {
+                temps = getTempsDiff(listeTransitionEtat[k], EtatActuel);
+            }
+            if (temps < min) {
+                min = temps;
+                choix = listeTransitionEtat[k];
+            }
+        }
+    } else {
+        int min = INT_MAX - hysteresis;
+        for (int k = 0; k < listeTransitionDepot.size(); k++) {
+            int random = 0;
+            if (hysteresis == 0) {
+                random = 0;
+            } else {
+                random = ((rand() % (hysteresis * 2)) - hysteresis);
+            }
+            min = (min + random);
+            if (min < 0) min = 0;
+            if ((*matriceTemps)[stoi(RemFirstChar(EtatActuel->voyage->TermFin))][stoi(RemFirstChar(listeTransitionDepot[k]->voyage->TermDeb))] < min) {
+                min = (*matriceTemps)[stoi(RemFirstChar(EtatActuel->voyage->TermFin))][stoi(RemFirstChar(listeTransitionDepot[k]->voyage->TermDeb))];
+                choix = listeTransitionDepot[k];
+            }
+        }
+    }
+    for (int i = 0; EtatActuel->LesChemins.size(); i++) {
+        if (EtatActuel->LesChemins[i] == choix) {
+
+            return i;
+        }
+    }
+    return -1;
+}
+
+int Graphe::GestionCheminSuivantRandowDepotLast(Etat* EtatActuel, vector <Etat*> listeTabou) {
+    //Verification des transitions
+    vector <Etat*> listeTransitionDepot;
+    vector <Etat*> listeTransitionEtat;
+    for (int i = 0; i < EtatActuel->LesChemins.size(); i++) {
+        bool trouve = false;
+        for (int j = 0; j < listeTabou.size(); j++) {
+            if (EtatActuel->LesChemins[i] == listeTabou[j]) {
+                trouve = true;
+            }
+        }
+        if (trouve == false) {
+            bool arrive = false;
+            for (int j = 0; j < DepotArrive.size(); j++) {
+                if (EtatActuel->LesChemins[i] == DepotArrive[j]) {
+                    arrive = true;
+                }
+            }
+            if (arrive == true) {
+                listeTransitionDepot.push_back(EtatActuel->LesChemins[i]);
+            } else {
+                listeTransitionEtat.push_back(EtatActuel->LesChemins[i]);
+            }
+        }
+    }
+
+    Etat* choix;
+    if (listeTransitionEtat.size() > 0) {
         choix = listeTransitionEtat[rand() % listeTransitionEtat.size()];
-    }else{
+    } else {
         choix = listeTransitionDepot[rand() % listeTransitionDepot.size()];
     }
-    for(int i = 0; EtatActuel->LesChemins.size(); i ++){
-        if(EtatActuel->LesChemins[i] == choix){
+    for (int i = 0; EtatActuel->LesChemins.size(); i++) {
+        if (EtatActuel->LesChemins[i] == choix) {
             return i;
         }
     }
