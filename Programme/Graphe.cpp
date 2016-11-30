@@ -155,22 +155,13 @@ vector < vector < Etat*> > Graphe::Resolution(int* temps, int* distance) {
     }
     for (int i = 0; i < ListeBus.size(); i++) {
         int tps = 0;
-        //        for (int j = 0; j < ListeBus[i].size(); j++) {
-        //            cout << ListeBus[i][j]->voyage->name << " ";
-        //        }
         tps = (*matriceTemps)[stoi(RemFirstChar(ListeBus[i][0]->voyage->TermFin))][stoi(RemFirstChar(ListeBus[i][1]->voyage->TermDeb))];
-        *temps += tps;
-        //cout << endl << "matrice[" << stoi(RemFirstChar(ListeBus[i][0]->voyage->TermFin)) << "][" << stoi(RemFirstChar(ListeBus[i][1]->voyage->TermDeb)) << "] = " << tps << endl;
         tps = ((ListeBus[i][ListeBus[i].size() - 2]->voyage->HeureFin.tm_hour * 60 + ListeBus[i][ListeBus[i].size() - 2]->voyage->HeureFin.tm_min)-((ListeBus[i][1]->voyage->HeureDeb.tm_hour * 60 + ListeBus[i][1]->voyage->HeureDeb.tm_min)));
         *temps += tps;
-        //cout << "((" << (ListeBus[i][ListeBus[i].size() - 2]->voyage->HeureFin.tm_hour * 60) << " + " << (ListeBus[i][ListeBus[i].size() - 2]->voyage->HeureFin.tm_min) << ") - (" << (ListeBus[i][1]->voyage->HeureDeb.tm_hour * 60) << " + " << (ListeBus[i][1]->voyage->HeureDeb.tm_min) << " = " << tps << endl;
         tps = (*matriceTemps)[stoi(RemFirstChar(ListeBus[i][ListeBus[i].size() - 2]->voyage->TermFin))][stoi(RemFirstChar(ListeBus[i][ListeBus[i].size() - 1]->voyage->TermDeb))];
         *temps += tps;
-        //cout << "matrice[" << stoi(RemFirstChar(ListeBus[i][0]->voyage->TermFin)) << "][" << stoi(RemFirstChar(ListeBus[i][1]->voyage->TermDeb)) << "] = " << tps << endl << endl;
 
     }
-    //cout << "nb Bus: " << ListeBus.size() << endl;
-    //cout << "total : " << *temps << endl;
     return ListeBus;
 }
 
