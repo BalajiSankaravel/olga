@@ -130,9 +130,11 @@ vector < vector < Etat*> > Graphe::Resolution(int* temps, int* distance) {
         trajetBus.push_back(Bus);
         nbBus++;
         bool listeArrive = false;
+        int limit = 0;
         while (!listeArrive) {
-            int indexC = GestionCheminSuivantGRASPDepotLast(Bus, tabou);
+            int indexC = GestionCheminSuivantGRASPDepotLastLimited(Bus, tabou, limit);
             if (indexC < 0) exit(0);
+            limit++;
 
             /////////////Distance
 
@@ -153,9 +155,9 @@ vector < vector < Etat*> > Graphe::Resolution(int* temps, int* distance) {
     }
     for (int i = 0; i < ListeBus.size(); i++) {
         int tps = 0;
-//        for (int j = 0; j < ListeBus[i].size(); j++) {
-//            cout << ListeBus[i][j]->voyage->name << " ";
-//        }
+        //        for (int j = 0; j < ListeBus[i].size(); j++) {
+        //            cout << ListeBus[i][j]->voyage->name << " ";
+        //        }
         tps = (*matriceTemps)[stoi(RemFirstChar(ListeBus[i][0]->voyage->TermFin))][stoi(RemFirstChar(ListeBus[i][1]->voyage->TermDeb))];
         *temps += tps;
         //cout << endl << "matrice[" << stoi(RemFirstChar(ListeBus[i][0]->voyage->TermFin)) << "][" << stoi(RemFirstChar(ListeBus[i][1]->voyage->TermDeb)) << "] = " << tps << endl;
@@ -274,7 +276,13 @@ int Graphe::GestionCheminSuivantGRASPDepotLast(Etat* EtatActuel, vector <Etat*> 
         int min = INT_MAX - hysteresis;
         for (int k = 0; k < listeTransitionEtat.size(); k++) {
             int temps;
-            min = (min + ((rand() % (hysteresis * 2)) - hysteresis));
+            int random = 0;
+            if (hysteresis == 0) {
+                random = 0;
+            } else {
+                random = ((rand() % (hysteresis * 2)) - hysteresis);
+            }
+            min = (min + random);
             if (min < 0) min = 0;
             if (EtatActuel->voyage->name == "Depot0") {//TODO
                 temps = listeTransitionEtat[k]->voyage->HeureDeb.tm_hour * 60 + listeTransitionEtat[k]->voyage->HeureDeb.tm_min;
@@ -289,7 +297,93 @@ int Graphe::GestionCheminSuivantGRASPDepotLast(Etat* EtatActuel, vector <Etat*> 
     } else {
         int min = INT_MAX - hysteresis;
         for (int k = 0; k < listeTransitionDepot.size(); k++) {
-            if ((*matriceTemps)[stoi(RemFirstChar(EtatActuel->voyage->TermFin))][stoi(RemFirstChar(listeTransitionDepot[k]->voyage->TermDeb))] < (min + ((rand() % (hysteresis * 2)) - hysteresis))) {
+            int random = 0;
+            if (hysteresis == 0) {
+                random = 0;
+            } else {
+                random = ((rand() % (hysteresis * 2)) - hysteresis);
+            }
+            min = (min + random);
+            if (min < 0) min = 0;
+            if ((*matriceTemps)[stoi(RemFirstChar(EtatActuel->voyage->TermFin))][stoi(RemFirstChar(listeTransitionDepot[k]->voyage->TermDeb))] < min) {
+                min = (*matriceTemps)[stoi(RemFirstChar(EtatActuel->voyage->TermFin))][stoi(RemFirstChar(listeTransitionDepot[k]->voyage->TermDeb))];
+                choix = listeTransitionDepot[k];
+            }
+        }
+    }
+    for (int i = 0; EtatActuel->LesChemins.size(); i++) {
+        if (EtatActuel->LesChemins[i] == choix) {
+
+            return i;
+        }
+    }
+    return -1;
+}
+
+int Graphe::GestionCheminSuivantGRASPDepotLastLimited(Etat* EtatActuel, vector <Etat*> listeTabou, int limit) {
+    //Verification des transitions
+    vector <Etat*> listeTransitionDepot;
+    vector <Etat*> listeTransitionEtat;
+    for (int i = 0; i < EtatActuel->LesChemins.size(); i++) {
+        bool trouve = false;
+        for (int j = 0; j < listeTabou.size(); j++) {
+            if (EtatActuel->LesChemins[i] == listeTabou[j]) {
+                trouve = true;
+            }
+        }
+        if (trouve == false) {
+            bool arrive = false;
+            for (int j = 0; j < DepotArrive.size(); j++) {
+                if (EtatActuel->LesChemins[i] == DepotArrive[j]) {
+                    arrive = true;
+                }
+            }
+            if (arrive == true) {
+                listeTransitionDepot.push_back(EtatActuel->LesChemins[i]);
+            } else {
+                listeTransitionEtat.push_back(EtatActuel->LesChemins[i]);
+            }
+        }
+    }
+
+    Etat* choix;
+
+    if (limit > (limitation-1))listeTransitionEtat.clear();
+
+    if (listeTransitionEtat.size() > 0) {
+        int min = INT_MAX - hysteresis;
+        for (int k = 0; k < listeTransitionEtat.size(); k++) {
+            int temps;
+            int random = 0;
+            if (hysteresis == 0) {
+                random = 0;
+            } else {
+                random = ((rand() % (hysteresis * 2)) - hysteresis);
+            }
+            min = (min + random);
+            if (min < 0) min = 0;
+            if (EtatActuel->voyage->name == "Depot0") {//TODO
+                temps = listeTransitionEtat[k]->voyage->HeureDeb.tm_hour * 60 + listeTransitionEtat[k]->voyage->HeureDeb.tm_min;
+            } else {
+                temps = getTempsDiff(listeTransitionEtat[k], EtatActuel);
+            }
+            if (temps < min) {
+                min = temps;
+                choix = listeTransitionEtat[k];
+            }
+        }
+    } else {
+        int min = INT_MAX - hysteresis;
+        for (int k = 0; k < listeTransitionDepot.size(); k++) {
+            int random = 0;
+            if (hysteresis == 0) {
+                random = 0;
+            } else {
+                random = ((rand() % (hysteresis * 2)) - hysteresis);
+            }
+            min = (min + random);
+            if (min < 0) min = 0;
+            if ((*matriceTemps)[stoi(RemFirstChar(EtatActuel->voyage->TermFin))][stoi(RemFirstChar(listeTransitionDepot[k]->voyage->TermDeb))] < min) {
                 min = (*matriceTemps)[stoi(RemFirstChar(EtatActuel->voyage->TermFin))][stoi(RemFirstChar(listeTransitionDepot[k]->voyage->TermDeb))];
                 choix = listeTransitionDepot[k];
             }
