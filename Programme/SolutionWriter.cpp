@@ -25,8 +25,7 @@ SolutionWriter::SolutionWriter(int NbBus, int dureeTotal, int KmTotal) {
 void SolutionWriter::write(vector <Bus*> lesBus){
     time_t now = time(0);
     char* dt = ctime(&now);
-    string filename = "solution_";
-    filename += dt;
+    string filename = "solutionEON";
     filename += ".txt";
 
     string content = 

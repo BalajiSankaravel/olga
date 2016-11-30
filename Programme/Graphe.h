@@ -21,8 +21,11 @@ public:
     void GenerationArcMemeLigne();
     void GenerationArcLigneDiff();
     string RemFirstChar(string);
+    int getTempsDiff(Etat* , Etat* );
     vector < vector < Etat*> > Resolution(int*,int*);
-    int GestionCheminSuivant(Etat*,vector <Etat*>);
+    int GestionCheminSuivantRandowDepotLast(Etat*,vector <Etat*>);
+    int GestionCheminSuivantGloutonDepotLast(Etat*,vector <Etat*>);
+    int GestionCheminSuivantGRASPDepotLast(Etat*,vector <Etat*>);
     void split(const std::string &s, char delim, std::vector<std::string> &elems);
     vector<string> split(const std::string &s, char delim);
     vector<Etat*> lesEtats;
