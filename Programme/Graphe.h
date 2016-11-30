@@ -22,7 +22,8 @@ public:
     void GenerationArcLigneDiff();
     string RemFirstChar(string);
     int getTempsDiff(Etat* , Etat* );
-    vector < vector < Etat*> > Resolution(int*,int*);
+    vector < vector < Etat*> > ResolutionSame(int*,int*);
+    vector < vector < Etat*> > ResolutionMulti(int*,int*);
     int GestionCheminSuivantRandowDepotLast(Etat*,vector <Etat*>);
     int GestionCheminSuivantGloutonDepotLast(Etat*,vector <Etat*>);
     int GestionCheminSuivantGRASPDepotLast(Etat*,vector <Etat*>);
@@ -35,7 +36,8 @@ public:
     vector <vector<int> >* matriceTemps;
     vector <vector<int> >* matriceDist;
     int limitation = 0;
-    int hysteresis = 0;    
+    int hysteresis = 0;   
+    int typeGen = 0;
 };
 
 #endif	/* GRAPHE_H */

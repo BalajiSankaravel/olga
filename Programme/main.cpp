@@ -92,7 +92,7 @@ int main(int argc, char** argv) {
             leGraphe.hysteresis = j;
             cout << "h : " << leGraphe.hysteresis << endl;
             for (int i = 0; i < NOMBRE_ITERATION; i++) {
-                vector < vector <Etat*> > resolution = leGraphe.Resolution(&temps, &distance);
+                vector < vector <Etat*> > resolution = leGraphe.ResolutionMulti(&temps, &distance);
                 if (resolution.size() <= nbBusMin) {
                     if ((((float) temps) * 1.5 + (float) distance) < score) {
                         disMin = distance;
