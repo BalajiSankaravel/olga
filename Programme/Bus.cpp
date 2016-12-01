@@ -12,6 +12,7 @@
  */
 
 #include "Bus.h"
+#include <iostream>
 
 Bus::Bus() {
 }
