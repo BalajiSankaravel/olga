@@ -7,11 +7,7 @@
 #include "Bus.h"
 #include "SolutionWriter.h"
 #include "PARAMETRE.h"
-<<<<<<< HEAD
-#include "Genetique.h"
-=======
 #include "Solution.h"
->>>>>>> 274915de17ec8e9c2b092d5c8964c7af0d800622
 
 
 using namespace std;
@@ -50,23 +46,27 @@ vector<Ligne> generationDesLignes(vector <T_UneLigne> lesHoraires) {
 
 void gestionDiff(FilesReader* leFichier) {
     /*Recuperation des informations dans les fichiers*/
-    string contenu = leFichier->OpenFile("horaires.csv");
+    cout<<"Recuperation CSV"<<endl;
+    string contenu = leFichier->OpenFile("horaires_ratp.csv");
     vector <T_UneLigne> lesHoraires = leFichier->extractHoraire(contenu);
 
-    contenu = leFichier->OpenFile("terminus.csv");
+    contenu = leFichier->OpenFile("matrice_temps_terminus_ratp.csv");
     vector <vector<int> > lesTempsTerminus = leFichier->createMatrice(contenu);
 
-    contenu = leFichier->OpenFile("dist_terminus.csv");
+    contenu = leFichier->OpenFile("matrice_dist_terminus_ratp.csv");
     vector <vector<int> > lesDistTerminus = leFichier->createMatrice(contenu);
     vector <string> lesIndexMatrice = leFichier->getIndexMatrice(contenu);
     
     
-    
+    cout<<"Creation Graphe"<<endl;
     /*Creation des Voyages*/
     vector <Ligne> lesLignes = generationDesLignes(lesHoraires);
-    Graphe leGraphe(1, &lesTempsTerminus, &lesDistTerminus, &lesIndexMatrice);
+    Graphe leGraphe(5, &lesTempsTerminus, &lesDistTerminus, &lesIndexMatrice);
+    cout<<"Creation Etat"<<endl;
     leGraphe.CreationEtat(&lesLignes);
+    cout<<"Creation Arc"<<endl;
     leGraphe.GenerationArcLigneDiff();
+    cout<<"Creation terminee"<<endl;
     int distance = 0;
     int temps = 0;
     int nbBusMin = INT_MAX;
@@ -105,12 +105,6 @@ void gestionDiff(FilesReader* leFichier) {
         }
         lesBus->push_back(bus);
     }
-<<<<<<< HEAD
-    Genetique* gen = new Genetique(&lesBus, &leGraphe,&lesTempsTerminus, &lesDistTerminus);
-    gen->Fitness();
-    SolutionWriter sw(lesBus.size(), tpsMin, disMin);
-    sw.write(lesBus);
-=======
     vector<Solution*>* v = new vector<Solution*>();
     Solution* s = new Solution();
     s->nbBus = lesBus->size();
@@ -125,7 +119,6 @@ void gestionDiff(FilesReader* leFichier) {
 }
 
 int main(int argc, char** argv) {
->>>>>>> 274915de17ec8e9c2b092d5c8964c7af0d800622
 
     FilesReader leFichier;
     srand(time(NULL));
