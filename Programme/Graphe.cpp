@@ -19,11 +19,11 @@ Graphe::Graphe(int nbDepot, vector <vector<int> >* pTemps, vector <vector<int> >
     matriceDist = pDist;
     indexMatrice = pIndex;
     for (int i = 0; i < nbDepot; i++) {
-        Voyage* unDepot = new Voyage("", "", 0, "Depot");
-        //unDepot->TermDeb = "T0";
-        //unDepot->TermFin = "T0";
-        unDepot->TermDeb = to_string(i);
-        unDepot->TermFin = to_string(i);
+        Voyage* unDepot = new Voyage("", "", 0, "Depot" + to_string(i));
+        unDepot->TermDeb = "T0";
+        unDepot->TermFin = "T0";
+        //unDepot->TermDeb = to_string(i);
+        //unDepot->TermFin = to_string(i);
         unDepot->HeureDeb.tm_hour = 0;
         unDepot->HeureDeb.tm_min = 0;
         unDepot->HeureFin.tm_hour = 0;
@@ -136,7 +136,8 @@ vector < vector < Etat*> > Graphe::ResolutionSame(int* temps, int* distance) {
         bool listeArrive = false;
         int limit = 0;
         while (!listeArrive) {
-            int indexC = GestionCheminSuivantGRASPDepotLastLimited(Bus, tabou, limit);
+
+            int indexC = GestionCheminSuivantGloutonDepotLast(Bus, tabou);
             if (indexC < 0) exit(0);
             limit++;
             /////////////Distance
@@ -156,6 +157,7 @@ vector < vector < Etat*> > Graphe::ResolutionSame(int* temps, int* distance) {
         }
         ListeBus.push_back(trajetBus);
     }
+    
     for (int i = 0; i < ListeBus.size(); i++) {
         int tps = 0;
         tps = getTemps(ListeBus[i][0]->voyage->TermFin,ListeBus[i][1]->voyage->TermDeb);
@@ -254,7 +256,7 @@ int Graphe::GestionCheminSuivantGloutonDepotLast(Etat* EtatActuel, vector <Etat*
         int min = INT_MAX;
         for (int k = 0; k < listeTransitionEtat.size(); k++) {
             int temps;
-            if (EtatActuel->voyage->name == "Depot") {//TODO
+            if (EtatActuel->voyage->name.find("Depot") != string::npos) {//TODO
                 temps = listeTransitionEtat[k]->voyage->HeureDeb.tm_hour * 60 + listeTransitionEtat[k]->voyage->HeureDeb.tm_min;
             } else {
                 temps = getTempsDiff(listeTransitionEtat[k], EtatActuel);
@@ -323,7 +325,8 @@ int Graphe::GestionCheminSuivantGRASPDepotLast(Etat* EtatActuel, vector <Etat*> 
             }
             min = (min + random);
             if (min < 0) min = 0;
-            if (EtatActuel->voyage->name == "Depot") {//TODO
+            if (EtatActuel->voyage->name.find("Depot") != string::npos) {//TODO
+                                cout<<"Ok"<<endl;
                 temps = listeTransitionEtat[k]->voyage->HeureDeb.tm_hour * 60 + listeTransitionEtat[k]->voyage->HeureDeb.tm_min;
             } else {
                 temps = getTempsDiff(listeTransitionEtat[k], EtatActuel);
@@ -401,7 +404,8 @@ int Graphe::GestionCheminSuivantGRASPDepotLastLimited(Etat* EtatActuel, vector <
             }
             min = (min + random);
             if (min < 0) min = 0;
-            if (EtatActuel->voyage->name == "Depot0") {//TODO
+            if (EtatActuel->voyage->name.find("Depot") != string::npos) {//TODO
+                cout<<"Ok"<<endl;
                 temps = listeTransitionEtat[k]->voyage->HeureDeb.tm_hour * 60 + listeTransitionEtat[k]->voyage->HeureDeb.tm_min;
             } else {
                 temps = getTempsDiff(listeTransitionEtat[k], EtatActuel);

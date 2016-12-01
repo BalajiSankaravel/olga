@@ -47,13 +47,13 @@ vector<Ligne> generationDesLignes(vector <T_UneLigne> lesHoraires) {
 void gestionDiff(FilesReader* leFichier) {
     /*Recuperation des informations dans les fichiers*/
     cout<<"Recuperation CSV"<<endl;
-    string contenu = leFichier->OpenFile("horaires_ratp.csv");
+    string contenu = leFichier->OpenFile("horaires.csv");
     vector <T_UneLigne> lesHoraires = leFichier->extractHoraire(contenu);
 
-    contenu = leFichier->OpenFile("matrice_temps_terminus_ratp.csv");
+    contenu = leFichier->OpenFile("terminus.csv");
     vector <vector<int> > lesTempsTerminus = leFichier->createMatrice(contenu);
 
-    contenu = leFichier->OpenFile("matrice_dist_terminus_ratp.csv");
+    contenu = leFichier->OpenFile("dist_terminus.csv");
     vector <vector<int> > lesDistTerminus = leFichier->createMatrice(contenu);
     vector <string> lesIndexMatrice = leFichier->getIndexMatrice(contenu);
     
@@ -122,7 +122,55 @@ int main(int argc, char** argv) {
 
     FilesReader leFichier;
     srand(time(NULL));
-    gestionDiff(&leFichier);
+    //gestionDiff(&leFichier);
+    
+    cout<<"Recuperation CSV"<<endl;
+    string contenu = leFichier.OpenFile("horaires.csv");
+    vector <T_UneLigne> lesHoraires = leFichier.extractHoraire(contenu);
+
+    contenu = leFichier.OpenFile("terminus.csv");
+    vector <vector<int> > lesTempsTerminus = leFichier.createMatrice(contenu);
+
+    contenu = leFichier.OpenFile("dist_terminus.csv");
+    vector <vector<int> > lesDistTerminus = leFichier.createMatrice(contenu);
+    vector <string> lesIndexMatrice = leFichier.getIndexMatrice(contenu);
+    
+     cout<<"Creation Graphe"<<endl;
+    /*Creation des Voyages*/
+    vector <Ligne> lesLignes = generationDesLignes(lesHoraires);
+    Graphe leGraphe(5, &lesTempsTerminus, &lesDistTerminus, &lesIndexMatrice);
+    cout<<"Creation Etat"<<endl;
+    leGraphe.CreationEtat(&lesLignes);
+    cout<<"Creation Arc"<<endl;
+    leGraphe.GenerationArcLigneDiff();
+    cout<<"Creation terminee"<<endl;
+    
+    int distance = 0;
+    int temps = 0;
+    
+    vector < vector <Etat*> > resolution = leGraphe.ResolutionSame(&temps, &distance);
+    
+    
+    
+    vector< Bus*>* lesBus = new vector<Bus*>();
+    for (int i = 0; i < resolution.size(); i++) {
+        Bus* bus = new Bus(i, 0);
+        for (int j = 1; j < resolution[i].size() - 1; j++) {
+            bus->pushVoyage(resolution[i][j]->voyage);
+        }
+        lesBus->push_back(bus);
+    }
+    vector<Solution*>* v = new vector<Solution*>();
+    Solution* s = new Solution();
+    s->nbBus = lesBus->size();
+    s->KmTotal = distance;
+    s->TpsTotal = temps;
+    s->lesBus = lesBus;
+    v->push_back(s);
+    cout << (*v)[0]->getText() << endl;
+    SolutionWriter sw;
+    sw.write(*v);
+
     //    cout << "r";
     cout << "-----FIN" << endl;
     return 0;
