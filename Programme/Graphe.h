@@ -8,6 +8,7 @@
 #include <vector>
 #include "Etat.h"
 #include "Ligne.h"
+#include "Bus.h"
 using namespace std;
 #ifndef GRAPHE_H
 #define	GRAPHE_H
@@ -24,6 +25,8 @@ public:
     int getDistance(string,string);
     int getTemps(string,string);
     int getTempsDiff(Etat* , Etat* );
+    int calculTimeFromBus(vector<Bus*>);
+    int calculDistFromBus(vector<Bus*>);
     vector < vector < Etat*> > ResolutionSame(int*,int*);
     vector < vector < Etat*> > ResolutionMulti(int*,int*);
     int GestionCheminSuivantRandowDepotLast(Etat*,vector <Etat*>);

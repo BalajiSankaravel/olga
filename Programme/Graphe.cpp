@@ -19,11 +19,19 @@ Graphe::Graphe(int nbDepot, vector <vector<int> >* pTemps, vector <vector<int> >
     matriceDist = pDist;
     indexMatrice = pIndex;
     for (int i = 0; i < nbDepot; i++) {
+<<<<<<< HEAD
         Voyage* unDepot = new Voyage("", "", 0, "Depot" + to_string(i));
         unDepot->TermDeb = "T0";
         unDepot->TermFin = "T0";
         //unDepot->TermDeb = to_string(i);
         //unDepot->TermFin = to_string(i);
+=======
+        Voyage* unDepot = new Voyage("", "", 0, "Depot");
+        unDepot->TermDeb = "T0";
+        unDepot->TermFin = "T0";
+//        unDepot->TermDeb = to_string(i);
+//        unDepot->TermFin = to_string(i);
+>>>>>>> origin/master
         unDepot->HeureDeb.tm_hour = 0;
         unDepot->HeureDeb.tm_min = 0;
         unDepot->HeureFin.tm_hour = 0;
@@ -50,7 +58,6 @@ void Graphe::CreationEtat(vector<Ligne>* lesLignes) {
 
 }
 
-
 void Graphe::GenerationArcMemeLigne() {
     typeGen = 0;
     for (auto i : lesEtats) {
@@ -62,7 +69,7 @@ void Graphe::GenerationArcMemeLigne() {
                         i->LesChemins.push_back(j);
                     } else {
 
-                        int l = getTemps(i->voyage->TermFin,j->voyage->TermDeb);
+                        int l = getTemps(i->voyage->TermFin, j->voyage->TermDeb);
                         if (l < 5) l = 5;
                         if ((j->voyage->HeureDeb.tm_hour * 60 + j->voyage->HeureDeb.tm_min - l) -
                                 ((i->voyage->HeureFin.tm_hour * 60 + i->voyage->HeureFin.tm_min)
@@ -85,7 +92,7 @@ void Graphe::GenerationArcLigneDiff() {
                         (i->voyage->HeureFin.tm_hour * 60 + i->voyage->HeureFin.tm_min) >= 0 && i->voyage->TermFin == j->voyage->TermDeb) {
                     i->LesChemins.push_back(j);
                 } else {
-                    int l = getTemps(i->voyage->TermFin,j->voyage->TermDeb);
+                    int l = getTemps(i->voyage->TermFin, j->voyage->TermDeb);
 
                     if (l < 5) l = 5;
 
@@ -143,7 +150,7 @@ vector < vector < Etat*> > Graphe::ResolutionSame(int* temps, int* distance) {
             /////////////Distance
 
             *distance += Bus->voyage->distance;
-            *distance += getDistance(Bus->voyage->TermFin,Bus->LesChemins[indexC]->voyage->TermDeb);
+            *distance += getDistance(Bus->voyage->TermFin, Bus->LesChemins[indexC]->voyage->TermDeb);
 
             trajetBus.push_back(Bus->LesChemins[indexC]);
             Bus = Bus->LesChemins[indexC];
@@ -160,10 +167,10 @@ vector < vector < Etat*> > Graphe::ResolutionSame(int* temps, int* distance) {
     
     for (int i = 0; i < ListeBus.size(); i++) {
         int tps = 0;
-        tps = getTemps(ListeBus[i][0]->voyage->TermFin,ListeBus[i][1]->voyage->TermDeb);
+        tps = getTemps(ListeBus[i][0]->voyage->TermFin, ListeBus[i][1]->voyage->TermDeb);
         tps = ((ListeBus[i][ListeBus[i].size() - 2]->voyage->HeureFin.tm_hour * 60 + ListeBus[i][ListeBus[i].size() - 2]->voyage->HeureFin.tm_min)-((ListeBus[i][1]->voyage->HeureDeb.tm_hour * 60 + ListeBus[i][1]->voyage->HeureDeb.tm_min)));
         *temps += tps;
-        tps = getTemps(ListeBus[i][ListeBus[i].size() - 2]->voyage->TermFin,ListeBus[i][ListeBus[i].size() - 1]->voyage->TermDeb);
+        tps = getTemps(ListeBus[i][ListeBus[i].size() - 2]->voyage->TermFin, ListeBus[i][ListeBus[i].size() - 1]->voyage->TermDeb);
         *temps += tps;
 
     }
@@ -189,7 +196,7 @@ vector < vector < Etat*> > Graphe::ResolutionMulti(int* temps, int* distance) {
             /////////////Distance
 
             *distance += Bus->voyage->distance;
-            *distance += getDistance(Bus->voyage->TermFin,Bus->LesChemins[indexC]->voyage->TermDeb);
+            *distance += getDistance(Bus->voyage->TermFin, Bus->LesChemins[indexC]->voyage->TermDeb);
 
             trajetBus.push_back(Bus->LesChemins[indexC]);
             Bus = Bus->LesChemins[indexC];
@@ -205,10 +212,10 @@ vector < vector < Etat*> > Graphe::ResolutionMulti(int* temps, int* distance) {
     }
     for (int i = 0; i < ListeBus.size(); i++) {
         int tps = 0;
-        tps = getTemps(ListeBus[i][0]->voyage->TermFin,ListeBus[i][1]->voyage->TermDeb);
+        tps = getTemps(ListeBus[i][0]->voyage->TermFin, ListeBus[i][1]->voyage->TermDeb);
         tps = ((ListeBus[i][ListeBus[i].size() - 2]->voyage->HeureFin.tm_hour * 60 + ListeBus[i][ListeBus[i].size() - 2]->voyage->HeureFin.tm_min)-((ListeBus[i][1]->voyage->HeureDeb.tm_hour * 60 + ListeBus[i][1]->voyage->HeureDeb.tm_min)));
         *temps += tps;
-        tps = getTemps(ListeBus[i][ListeBus[i].size() - 2]->voyage->TermFin,ListeBus[i][ListeBus[i].size() - 1]->voyage->TermDeb);
+        tps = getTemps(ListeBus[i][ListeBus[i].size() - 2]->voyage->TermFin, ListeBus[i][ListeBus[i].size() - 1]->voyage->TermDeb);
         *temps += tps;
 
     }
@@ -222,6 +229,30 @@ int Graphe::getTempsDiff(Etat* a, Etat* b) {
         exit(0);
     }
     return i;
+}
+
+int Graphe::calculDistFromBus(vector<Bus*> ListeBus) {
+    int distance = 0;
+    for (int i = 0; i < ListeBus.size(); i++) {
+        for (int j = 0; j < ListeBus[i]->getItineraire().size(); j++) {
+            distance += ListeBus[i]->getItineraire()[j]->distance;
+            if (j != ListeBus[i]->getItineraire().size() - 1) {
+                distance += getDistance(ListeBus[i]->getItineraire()[j]->TermFin, ListeBus[i]->getItineraire()[j + 1]->TermDeb);
+            }
+        }
+    }
+    return distance;
+}
+
+int Graphe::calculTimeFromBus(vector<Bus*> ListeBus) {
+    int tps = 0;
+    for (int i = 0; i < ListeBus.size(); i++) {
+        int tps = 0;
+        tps += getTemps(ListeBus[i]->getItineraire()[0]->TermFin, ListeBus[i]->getItineraire()[1]->TermDeb);
+        tps += ((ListeBus[i]->getItineraire()[ListeBus[i]->getItineraire().size() - 2]->HeureFin.tm_hour * 60 + ListeBus[i]->getItineraire()[ListeBus[i]->getItineraire().size() - 2]->HeureFin.tm_min)-((ListeBus[i]->getItineraire()[1]->HeureFin.tm_hour * 60 + ListeBus[i]->getItineraire()[1]->HeureFin.tm_min)));
+        tps += getTemps(ListeBus[i]->getItineraire()[ListeBus[i]->getItineraire().size() - 2]->TermFin, ListeBus[i]->getItineraire()[ListeBus[i]->getItineraire().size() - 1]->TermDeb);
+    }
+    return tps;
 }
 
 int Graphe::GestionCheminSuivantGloutonDepotLast(Etat* EtatActuel, vector <Etat*> listeTabou) {
@@ -256,7 +287,11 @@ int Graphe::GestionCheminSuivantGloutonDepotLast(Etat* EtatActuel, vector <Etat*
         int min = INT_MAX;
         for (int k = 0; k < listeTransitionEtat.size(); k++) {
             int temps;
+<<<<<<< HEAD
             if (EtatActuel->voyage->name.find("Depot") != string::npos) {//TODO
+=======
+            if (EtatActuel->voyage->name.find("Depot")  != string::npos) {//TODO
+>>>>>>> origin/master
                 temps = listeTransitionEtat[k]->voyage->HeureDeb.tm_hour * 60 + listeTransitionEtat[k]->voyage->HeureDeb.tm_min;
             } else {
                 temps = getTempsDiff(listeTransitionEtat[k], EtatActuel);
@@ -270,8 +305,8 @@ int Graphe::GestionCheminSuivantGloutonDepotLast(Etat* EtatActuel, vector <Etat*
     } else {
         int min = INT_MAX;
         for (int k = 0; k < listeTransitionDepot.size(); k++) {
-            if (getTemps(EtatActuel->voyage->TermFin,listeTransitionDepot[k]->voyage->TermDeb) < min) {
-                min = getTemps(EtatActuel->voyage->TermFin,listeTransitionDepot[k]->voyage->TermDeb);
+            if (getTemps(EtatActuel->voyage->TermFin, listeTransitionDepot[k]->voyage->TermDeb) < min) {
+                min = getTemps(EtatActuel->voyage->TermFin, listeTransitionDepot[k]->voyage->TermDeb);
                 choix = listeTransitionDepot[k];
             }
         }
@@ -325,8 +360,12 @@ int Graphe::GestionCheminSuivantGRASPDepotLast(Etat* EtatActuel, vector <Etat*> 
             }
             min = (min + random);
             if (min < 0) min = 0;
+<<<<<<< HEAD
             if (EtatActuel->voyage->name.find("Depot") != string::npos) {//TODO
                                 cout<<"Ok"<<endl;
+=======
+            if (EtatActuel->voyage->name.find("Depot")  != string::npos) {
+>>>>>>> origin/master
                 temps = listeTransitionEtat[k]->voyage->HeureDeb.tm_hour * 60 + listeTransitionEtat[k]->voyage->HeureDeb.tm_min;
             } else {
                 temps = getTempsDiff(listeTransitionEtat[k], EtatActuel);
@@ -347,8 +386,8 @@ int Graphe::GestionCheminSuivantGRASPDepotLast(Etat* EtatActuel, vector <Etat*> 
             }
             min = (min + random);
             if (min < 0) min = 0;
-            if (getTemps(EtatActuel->voyage->TermFin,listeTransitionDepot[k]->voyage->TermDeb) < min) {
-                min = getTemps(EtatActuel->voyage->TermFin,listeTransitionDepot[k]->voyage->TermDeb);
+            if (getTemps(EtatActuel->voyage->TermFin, listeTransitionDepot[k]->voyage->TermDeb) < min) {
+                min = getTemps(EtatActuel->voyage->TermFin, listeTransitionDepot[k]->voyage->TermDeb);
                 choix = listeTransitionDepot[k];
             }
         }
@@ -390,7 +429,7 @@ int Graphe::GestionCheminSuivantGRASPDepotLastLimited(Etat* EtatActuel, vector <
 
     Etat* choix;
 
-    if (limit > (limitation-1))listeTransitionEtat.clear();
+    if (limit > (limitation - 1))listeTransitionEtat.clear();
 
     if (listeTransitionEtat.size() > 0) {
         int min = INT_MAX - hysteresis;
@@ -404,8 +443,12 @@ int Graphe::GestionCheminSuivantGRASPDepotLastLimited(Etat* EtatActuel, vector <
             }
             min = (min + random);
             if (min < 0) min = 0;
+<<<<<<< HEAD
             if (EtatActuel->voyage->name.find("Depot") != string::npos) {//TODO
                 cout<<"Ok"<<endl;
+=======
+            if (EtatActuel->voyage->name.find("Depot")  != string::npos) {
+>>>>>>> origin/master
                 temps = listeTransitionEtat[k]->voyage->HeureDeb.tm_hour * 60 + listeTransitionEtat[k]->voyage->HeureDeb.tm_min;
             } else {
                 temps = getTempsDiff(listeTransitionEtat[k], EtatActuel);
@@ -426,8 +469,8 @@ int Graphe::GestionCheminSuivantGRASPDepotLastLimited(Etat* EtatActuel, vector <
             }
             min = (min + random);
             if (min < 0) min = 0;
-            if (getTemps(EtatActuel->voyage->TermFin,listeTransitionDepot[k]->voyage->TermDeb) < min) {
-                min = getTemps(EtatActuel->voyage->TermFin,listeTransitionDepot[k]->voyage->TermDeb);
+            if (getTemps(EtatActuel->voyage->TermFin, listeTransitionDepot[k]->voyage->TermDeb) < min) {
+                min = getTemps(EtatActuel->voyage->TermFin, listeTransitionDepot[k]->voyage->TermDeb);
                 choix = listeTransitionDepot[k];
             }
         }
@@ -481,51 +524,48 @@ int Graphe::GestionCheminSuivantRandowDepotLast(Etat* EtatActuel, vector <Etat*>
     return -1;
 }
 
-
-
-int Graphe::getDistance(string TermA, string TermB){
+int Graphe::getDistance(string TermA, string TermB) {
     int indexA;
     int indexB;
     int i = 0;
-    while(TermA != (*indexMatrice)[i]){
+    while (TermA != (*indexMatrice)[i]) {
         i++;
     }
     indexA = i;
     i = 0;
-    while(TermB != (*indexMatrice)[i]){
+    while (TermB != (*indexMatrice)[i]) {
         i++;
     }
     indexB = i;
-    if (indexA > indexB){
+    if (indexA > indexB) {
         int tmp = indexA;
         indexA = indexB;
         indexB = tmp;
     }
-    
-    
+
+
     return (*matriceDist)[indexA][indexB];
-    
+
 }
 
-
-int Graphe::getTemps(string TermA, string TermB){
+int Graphe::getTemps(string TermA, string TermB) {
     int indexA;
     int indexB;
     int i = 0;
-    while(TermA != (*indexMatrice)[i]){
+    while (TermA != (*indexMatrice)[i]) {
         i++;
     }
     indexA = i;
     i = 0;
-    while(TermB != (*indexMatrice)[i]){
+    while (TermB != (*indexMatrice)[i]) {
         i++;
     }
     indexB = i;
-    if (indexA > indexB){
+    if (indexA > indexB) {
         int tmp = indexA;
         indexA = indexB;
         indexB = tmp;
     }
     return (*matriceTemps)[indexA][indexB];
-    
+
 }
