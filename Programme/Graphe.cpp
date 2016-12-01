@@ -521,7 +521,6 @@ int Graphe::getTemps(string TermA, string TermB){
         indexB = tmp;
     }
     
-    //cout<<"Case: "<<indexA<<" - "<<indexB<<" --> dist: "<<(*matriceDist)[indexA][indexB]<<"   temps: "<<round((*matriceDist)[indexA][indexB]*2.4)<<endl;
-    return round((*matriceDist)[indexA][indexB] * 2.4);
+    return (*matriceTemps)[indexA][indexB];
     
 }
