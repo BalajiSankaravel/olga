@@ -39,20 +39,37 @@ int FilesReader::getNombreTerm(string information) {
     return nbTerminus;
 }
 
+vector <string> FilesReader::getIndexMatrice(string information){
+    int nbTerminus = -1;
+    vector <string> indexMatrice;
+    istringstream lesinfos(information);
+    string line;
+    getline(lesinfos, line);
+    stringstream lineStream(line);
+    string cell;
+    while (getline(lineStream, cell, ',')) {
+        if(nbTerminus > -1 ) indexMatrice.push_back(cell);
+        nbTerminus++;
+    }
+    return indexMatrice;
+}
+
  vector < vector<int> > FilesReader::createMatrice(string information) {
     int i = -1;
     int j = -1;
     int nbTerminus = getNombreTerm(information);
-    vector < vector<int> > laMatrice(nbTerminus, vector<int>(nbTerminus));
+    vector < vector<int> > laMatrice;
     istringstream lesinfos(information);
     string line;
     while (getline(lesinfos, line)) {
         stringstream lineStream(line);
         string cell;
+        laMatrice.push_back(vector<int>());
         while (getline(lineStream, cell, ',')) {
             if (j != -1 && i != -1) {
                 if (j < nbTerminus && i < nbTerminus) {
-                    laMatrice[i][j] = stoi(cell);
+                    if(cell == "") cell = "0";
+                    laMatrice[i].push_back(stoi(cell));
                 }
             }
             j++;

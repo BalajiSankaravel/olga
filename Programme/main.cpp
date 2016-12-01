@@ -54,9 +54,13 @@ void gestionDiff(FilesReader* leFichier) {
 
     contenu = leFichier->OpenFile("dist_terminus.csv");
     vector <vector<int> > lesDistTerminus = leFichier->createMatrice(contenu);
+    vector <string> lesIndexMatrice = leFichier->getIndexMatrice(contenu);
+    
+    
+    
     /*Creation des Voyages*/
     vector <Ligne> lesLignes = generationDesLignes(lesHoraires);
-    Graphe leGraphe(1, &lesTempsTerminus, &lesDistTerminus);
+    Graphe leGraphe(1, &lesTempsTerminus, &lesDistTerminus, &lesIndexMatrice);
     leGraphe.CreationEtat(&lesLignes);
     leGraphe.GenerationArcLigneDiff();
     int distance = 0;
@@ -107,6 +111,7 @@ void gestionDiff(FilesReader* leFichier) {
     cout << (*v)[0]->getText() << endl;
     SolutionWriter sw;
     sw.write(*v);
+    
 }
 
 int main(int argc, char** argv) {
@@ -115,8 +120,7 @@ int main(int argc, char** argv) {
     srand(time(NULL));
     gestionDiff(&leFichier);
     //    cout << "r";
-    cout << "-----FFN" << endl;
-
+    cout << "-----FIN" << endl;
     return 0;
 }
 

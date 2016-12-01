@@ -23,6 +23,7 @@ public:
     int getNombreTerm(string);
     vector < vector<int> > createMatrice(string);
     vector<T_UneLigne> extractHoraire(string);
+    vector <string> getIndexMatrice(string);
 protected:
 
 };

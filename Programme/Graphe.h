@@ -14,13 +14,15 @@ using namespace std;
 
 class Graphe {
 public:
-    Graphe(int,vector <vector<int> >*,vector <vector<int> >*);
+    Graphe(int,vector <vector<int> >*,vector <vector<int> >*,vector<string>*);
     void CreationEtat(vector <Ligne>*);
     void GenerationEtatSameLine();
     void GenerationetatMultiLine();
     void GenerationArcMemeLigne();
     void GenerationArcLigneDiff();
     string RemFirstChar(string);
+    int getDistance(string,string);
+    int getTemps(string,string);
     int getTempsDiff(Etat* , Etat* );
     vector < vector < Etat*> > ResolutionSame(int*,int*);
     vector < vector < Etat*> > ResolutionMulti(int*,int*);
@@ -35,6 +37,7 @@ public:
     vector<Etat*> DepotArrive;
     vector <vector<int> >* matriceTemps;
     vector <vector<int> >* matriceDist;
+    vector <string>* indexMatrice;
     int limitation = 0;
     int hysteresis = 0;   
     int typeGen = 0;
