@@ -10,6 +10,8 @@
 #include <sstream>
 #include <limits.h>
 #include "PARAMETRE.h"
+#include <math.h>
+
 using namespace std;
 
 Graphe::Graphe(int nbDepot, vector <vector<int> >* pTemps, vector <vector<int> >* pDist, vector<string>* pIndex) {
@@ -519,7 +521,7 @@ int Graphe::getTemps(string TermA, string TermB){
         indexB = tmp;
     }
     
-    
-    return (*matriceDist)[indexA][indexB] * 0.0024;
+    //cout<<"Case: "<<indexA<<" - "<<indexB<<" --> dist: "<<(*matriceDist)[indexA][indexB]<<"   temps: "<<round((*matriceDist)[indexA][indexB]*2.4)<<endl;
+    return round((*matriceDist)[indexA][indexB] * 2.4);
     
 }
