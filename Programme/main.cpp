@@ -15,6 +15,7 @@
 #include "Bus.h"
 #include "SolutionWriter.h"
 #include "PARAMETRE.h"
+#include "Genetique.h"
 
 
 using namespace std;
@@ -116,7 +117,8 @@ int main(int argc, char** argv) {
         }
         lesBus.push_back(bus);
     }
-
+    Genetique* gen = new Genetique(&lesBus, &leGraphe,&lesTempsTerminus, &lesDistTerminus);
+    gen->Fitness();
     SolutionWriter sw(lesBus.size(), tpsMin, disMin);
     sw.write(lesBus);
 
